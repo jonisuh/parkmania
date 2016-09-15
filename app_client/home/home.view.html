@@ -1,1 +1,14 @@
-<h1>test</h1>
+<h1>Parkmania</h1>
+<br>
+
+<div ng-hide="vm.isLoggedIn">
+	<a href="/login">Login</a>
+	<br>
+	<a href="/registration">Registration</a>
+</div>
+
+<div ng-show="vm.isLoggedIn">
+	<span>Username: </span>{{ vm.currentUser.name }}
+	<br>
+	<a href="" ng-click="vm.logout()">Logout</a>
+</div>

@@ -1,14 +1,15 @@
 (function () {
 
   angular.module('Parkmania', ['ngResource','ngRoute'])
-    .config(['$routeProvider', config]);
+    .config(['$routeProvider', '$locationProvider', config]);
 
 
-  function config($routeProvider){
+  function config($routeProvider, $locationProvider){
     $routeProvider
         .when('/', {
 		    templateUrl: '/home/home.view.html',
-		    controller: 'HomeCtrl'
+		    controller: 'HomeCtrl',
+		    controllerAs : 'vm'
 		})
 		.when('/registration', {
 	        templateUrl: '/auth/register/register.view.html',
@@ -22,6 +23,11 @@
 		})
         .otherwise({
             redirectTo: '/'
+        });
+
+        $locationProvider.html5Mode({
+        	enabled : true,
+        	requireBase: false
         });
 }
 
