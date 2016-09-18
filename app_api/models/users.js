@@ -47,4 +47,3 @@ userschema.methods.generateJwt = function(){
 };
 
 mongoose.model('User', userschema);
-

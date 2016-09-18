@@ -35,3 +35,5 @@ gracefulShutdown = function (msg, callback) {
 }
 
 require('./users');
+require('./review');
+require('./parking');

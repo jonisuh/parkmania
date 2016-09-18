@@ -5,7 +5,7 @@
 
 	loginCtrl.$inject = ['$location','authentication'];
 	function loginCtrl($location, authentication){
-
+console.log("login test");
 		var vm = this;
 		vm.pageHeader = {
 			title: 'Sign in'

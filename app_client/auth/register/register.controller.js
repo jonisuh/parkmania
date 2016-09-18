@@ -5,7 +5,7 @@
 
 	registerCtrl.$inject = ['$location','authentication'];
 	function registerCtrl($location, authentication){
-
+		
 		var vm = this;
 		vm.pageHeader = {
 			title: 'Create a new account'

@@ -7,13 +7,7 @@ var auth = jwt({
 });
 
 var ctrlAuth = require('../controllers/authentication');
-
-/* GET home page. */
-
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Parkmania' });
-});
-
+var ctrlPark = require('../controllers/parking');
 
 /*
 //videos api
@@ -23,6 +17,10 @@ router.get('/api/videos/:id', ctrlVideos.getVideoByID);
 router.put('/api/videos/:id', auth, ctrlVideos.updateVideoByID);
 router.delete('/api/videos/:id', auth, ctrlVideos.deleteVideo);
 */
+
+//Parking spot api
+//router.get('/api/parkingspot', ctrlVideos.getAllVideos);
+router.post('/api/parkingspot',  ctrlPark.addParkingSpot);
 
 //authentication
 router.post('/api/register', ctrlAuth.register);

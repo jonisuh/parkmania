@@ -21,6 +21,16 @@
 		  controller: 'LoginCtrl',
 		  controllerAs: 'vm'
 		})
+		.when('/review', {
+		  templateUrl: '/review/review.view.html',
+		  controller: 'ReviewCtrl',
+		  controllerAs: 'vm'
+		})
+		.when('/parking', {
+		  templateUrl: '/parking/parking.view.html',
+		  controller: 'ParkingCtrl',
+		  controllerAs: 'vm'
+		})
         .otherwise({
             redirectTo: '/'
         });
