@@ -8,19 +8,25 @@ var auth = jwt({
 
 var ctrlAuth = require('../controllers/authentication');
 var ctrlPark = require('../controllers/parking');
-
-/*
-//videos api
-router.get('/api/videos', ctrlVideos.getAllVideos);
-router.post('/api/videos', auth,  ctrlVideos.postNewVideo);
-router.get('/api/videos/:id', ctrlVideos.getVideoByID);
-router.put('/api/videos/:id', auth, ctrlVideos.updateVideoByID);
-router.delete('/api/videos/:id', auth, ctrlVideos.deleteVideo);
-*/
+var ctrlReview = require('../controllers/reviews');
 
 //Parking spot api
-//router.get('/api/parkingspot', ctrlVideos.getAllVideos);
+router.get('/api/parkingspot/all', ctrlPark.getAllParkingSpots);
+router.get('/api/parkingspot', ctrlPark.getParkingSpotsNear);
+router.get('/api/parkingspot/:id',  ctrlPark.getParkingSpot);
+router.get('/api/parkingspot/',  ctrlPark.getParkingSpot);
 router.post('/api/parkingspot',  ctrlPark.addParkingSpot);
+/*
+router.put('/api/parkingspot/:id',  ctrlPark.);
+router.delete('/api/parkingspot/:id',  ctrlPark.);
+*/
+
+//Review api
+//router.get('/api/parkingspot/:id/review',  ctrlReview.getReviews);
+//router.get('/api/parkingspot/:id/review/:reviewid',  ctrlReview.getReviewById);
+router.post('/api/parkingspot/:id/review', auth,  ctrlReview.createReview);
+//router.put('/api/parkingspot/:id/review/:reviewid',  ctrlReview.modifyReview);
+//router.delete('/api/parkingspot/:id/review/:reviewid',  ctrlReview.deleteReview);
 
 //authentication
 router.post('/api/register', ctrlAuth.register);
