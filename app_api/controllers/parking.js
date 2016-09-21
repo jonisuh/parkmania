@@ -33,7 +33,7 @@ module.exports.getParkingSpot = function(req, res) {
             .findById(req.params.id, function (err, parkingspot) {
                 if (!parkingspot) {
                     sendJSONresponse(res, 404, {
-                        "message": "locationid not found"
+                        "message": "parking id not found"
                     });
                     return;
                 } else if (err) {
@@ -70,13 +70,15 @@ module.exports.getParkingSpotsNear = function(req, res) {
     };
     var options = {
         spherical: true,
-        maxDistance: parseFloat(req.query.maxdist) / 6371,
-        num: parseFloat(req.query.results)
+        maxDistance: parseFloat(req.query.maxdist) * 1000,
+        num: parseInt(req.query.results)
     };
+
     Parkingspot.geoNear(point, options, function(err, results, stats){
         if(err){
             sendJSONresponse(res, 404, err);
         }else{
+            console.log(results);
             var parkingspots = parkingSpotsAsList(req, res, results, stats);
             sendJSONresponse(res, 200, parkingspots);
         }
@@ -88,7 +90,7 @@ var parkingSpotsAsList = function(req, res, results, stats) {
   var parkingspots = [];
   results.forEach(function(doc) {
     parkingspots.push({
-      distance: doc.dis * 6371,
+      distance: doc.dis,
       address: doc.obj.address,
       coords: doc.obj.coords,
       reviews: doc.obj.reviews,
