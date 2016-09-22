@@ -8,8 +8,11 @@
   function location (){
 
     var getLocation = function (successcallback) {
+      var ua = navigator.userAgent.toLowerCase();
       isAndroid = ua.indexOf("android") > -1,
-      geoTimeout = isAndroid ? '15000' : '1000';
+      geoTimeout = isAndroid ? '30000' : '5000';
+
+      console.log(geoTimeout);
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(successcallback, errorAlert, {
