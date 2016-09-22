@@ -11,7 +11,7 @@
 
       var ua = navigator.userAgent.toLowerCase();
       isAndroid = ua.indexOf("android") > -1,
-      geoTimeout = isAndroid ? '30000' : '5000';
+      geoTimeout = isAndroid ? '40000' : '15000';
 
       //console.log(geoTimeout);
 
