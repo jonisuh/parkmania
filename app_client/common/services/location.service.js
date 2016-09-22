@@ -28,7 +28,8 @@
         navigator.geolocation.getCurrentPosition(function () {}, function () {}, {});
         //The working next statement.
         navigator.geolocation.getCurrentPosition(successcallback ,errorcallback, {
-            enableHighAccuracy: true
+            enableHighAccuracy: true,
+            timeout: geoTimeout
         });
 
 
