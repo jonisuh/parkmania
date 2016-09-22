@@ -19,7 +19,7 @@
         navigator.geolocation.getCurrentPosition(successcallback, errorcallback, {
           enableHighAccuracy: true,
           timeout : geoTimeout,
-          maximumAge: 3000
+          maximumAge: 0
         });
       }
       else {
