@@ -9,7 +9,11 @@
 
     var getLocation = function (successcallback) {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(successcallback, errorAlert );
+        navigator.geolocation.getCurrentPosition(successcallback, errorAlert, {
+          enableHighAccuracy: true,
+          timeout : 5000,
+          maximumAge: 0
+        });
       }
       else {
         alert("Geolocation not enabled");

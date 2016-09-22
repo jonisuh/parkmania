@@ -36,6 +36,7 @@
 	}
 
 	vm.locationsuccess = function(position){
+		alert(position.coords.longitude+" "+position.coords.latitude);
 		vm.parking.lng = position.coords.longitude;
 		vm.parking.lat = position.coords.latitude;
 		$scope.$apply();
