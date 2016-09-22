@@ -13,7 +13,7 @@
       isAndroid = ua.indexOf("android") > -1,
       geoTimeout = isAndroid ? '30000' : '5000';
 
-      console.log(geoTimeout);
+      //console.log(geoTimeout);
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(successcallback, errorcallback, {
