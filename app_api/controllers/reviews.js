@@ -39,8 +39,21 @@ module.exports.createReview = function(req, res) {
 	                return;
 	            }
 
+	            description = "";
+	            if(req.body.description){
+	            	description = req.body.description;
+	            }
+	            var rating = parseInt(req.body.rating);
+				if(rating < 0){
+					rating = 0;
+				}
+				if(rating > 5){
+					rating = 5;
+				}
+
 	            review = new Review();
-	            review.rating = parseInt(req.body.rating);
+	            review.rating = rating;
+	            review.description = description;
 	            review.author = user;
 	            review.parkingspot = parkingspot;
 	            /*
@@ -159,6 +172,143 @@ module.exports.getReviews = function(req, res) {
 
             });
     } else {
+        console.log('No id');
+        sendJSONresponse(res, 404, {
+          "message": "ID not specified"
+        });
+    }
+};
+
+
+module.exports.modifyReview = function(req, res) {
+	 if(req.params && req.params.id && req.params.reviewid){
+	 	if(req.body.rating && req.body.description){
+	 		getUser(req, res, function(req, res, user){
+
+	 			Review.findById(req.params.reviewid).exec(function (err, review) {
+	                if (!review) {
+	                    sendJSONresponse(res, 404, {
+	                        "message": "review id not found"
+	                    });
+	                    return;
+	                } else if (err) {
+	                    console.log(err);
+	                    sendJSONresponse(res, 404, err);
+	                    return;
+	                }
+
+	                //Checking that the author is same
+	                if(user._id.toString() !== review.author.toString()){
+	                	console.log("invalid author "+user._id+" "+review.author);
+	                    sendJSONresponse(res, 401, {
+	                    	'message' : 'You are not the author of this review.'
+	                    });
+	                    return;
+	                }
+
+	                var rating = parseInt(req.body.rating);
+					if(rating < 0){
+						rating = 0;
+					}
+					if(rating > 5){
+						rating = 5;
+					}
+					var description = req.body.description;
+
+					Review.findByIdAndUpdate(req.params.reviewid, {$set: { rating: rating, description: description }},{new: true, safe: true, upsert: true}, function (err, review) {
+						if(err) {
+				            sendJSONresponse(res, 404, err);
+				        }else{
+				        	console.log("-----------");
+				      		console.log(review);
+
+						sendJSONresponse(res, 201, {
+				            'review' : review
+				        });
+						}
+					});
+
+	            });
+
+				
+			});
+		} else {
+	        console.log('New values not defined');
+	        sendJSONresponse(res, 400, {
+	          "message": "New values not defined"
+	        });
+	    }
+    } else {
+        console.log('No id');
+        sendJSONresponse(res, 404, {
+          "message": "ID not specified"
+        });
+    }
+};
+
+module.exports.deleteReview = function(req, res) {
+	 if(req.params && req.params.id && req.params.reviewid){
+ 		getUser(req, res, function(req, res, user){
+
+ 			Review.findById(req.params.reviewid).exec(function (err, review) {
+                if (!review) {
+                    sendJSONresponse(res, 404, {
+                        "message": "review id not found"
+                    });
+                    return;
+                } else if (err) {
+                    console.log(err);
+                    sendJSONresponse(res, 404, err);
+                    return;
+                }
+
+                //Checking that the author is same
+                if(user._id.toString() !== review.author.toString()){
+                	console.log("invalid author "+user._id+" "+review.author);
+                    sendJSONresponse(res, 401, {
+                    	'message' : 'You are not the author of this review.'
+                    });
+                    return;
+                }
+            });
+
+            Review.remove({ _id: req.params.reviewid }, function(err, removed) {
+			    if (err) {
+                    console.log(err);
+                    sendJSONresponse(res, 404, err);
+                    return;
+                } /*
+				console.log("removed from review collection");
+                Parkingspot.update({_id: req.params.id},{ $pull: {reviews : { _id : req.params.reviewid }}},{ safe: true },
+			      function(err, obj) {
+			      	if(!obj){
+			      		console.log("the fug");
+			      	}
+			      	console.log(obj);
+			      	console.log("removed from parkingspot array");
+			        sendJSONresponse(res, 200, {
+                        "deleted": review
+                    });
+			     });
+				*/
+								    
+			});
+
+			Parkingspot.findByIdAndUpdate(req.params.id, {$pull: {reviews: req.params.reviewid}}, function(err, data){
+			  	console.log(err, data);
+			  	if (err) {
+                    console.log(err);
+                    sendJSONresponse(res, 404, err);
+                    return;
+                }
+                sendJSONresponse(res, 200, {
+                    "deleted": data
+                });
+
+			});
+
+ 		});
+	} else {
         console.log('No id');
         sendJSONresponse(res, 404, {
           "message": "ID not specified"

@@ -25,8 +25,8 @@ router.delete('/api/parkingspot/:id',  ctrlPark.);
 router.get('/api/parkingspot/:id/review',  ctrlReview.getReviews);
 router.get('/api/parkingspot/:id/review/:reviewid',  ctrlReview.getReviewById);
 router.post('/api/parkingspot/:id/review', auth,  ctrlReview.createReview);
-//router.put('/api/parkingspot/:id/review/:reviewid',  ctrlReview.modifyReview);
-//router.delete('/api/parkingspot/:id/review/:reviewid',  ctrlReview.deleteReview);
+router.put('/api/parkingspot/:id/review/:reviewid', auth,   ctrlReview.modifyReview);
+router.delete('/api/parkingspot/:id/review/:reviewid', auth,  ctrlReview.deleteReview);
 
 //authentication
 router.post('/api/register', ctrlAuth.register);

@@ -5,19 +5,19 @@
     .module('Parkmania')
     .controller('ParkingCtrl', parkingCtrl);
 
-  parkingCtrl.$inject = ['$location','$route','parking'];
-  function parkingCtrl ($location,$route,parking) {
+  parkingCtrl.$inject = ['$scope','$location','$route','parking','location'];
+  function parkingCtrl ($scope, $location,$route,parking,location) {
     var vm = this;
 
     vm.pageHeader = {
 		title: 'Submit a parking spot'
 	};
-
+	
 	vm.parking = {
 		address : "",
 		lng : "",
 		lat : ""
-	};
+	}; 
 
 	vm.onSubmit = function() {
 		vm.formError = "";
@@ -34,6 +34,14 @@
 		parking.createParkingSpot(vm.parking);
 
 	}
+
+	vm.locationsuccess = function(position){
+		vm.parking.lng = position.coords.longitude;
+		vm.parking.lat = position.coords.latitude;
+		$scope.$apply();
+	}
+
+	location.getLocation(vm.locationsuccess);
 
   }
 
