@@ -16,11 +16,25 @@
       //console.log(geoTimeout);
 
       if (navigator.geolocation) {
+        /*
         navigator.geolocation.getCurrentPosition(successcallback, errorcallback, {
           enableHighAccuracy: true,
           timeout : geoTimeout,
           maximumAge: 0
         });
+        */
+
+        //Dummy one, which will result in a working next statement.
+        navigator.geolocation.getCurrentPosition(function () {}, function () {}, {});
+        //The working next statement.
+        navigator.geolocation.getCurrentPosition(successcallback ,errorcallback, {
+            enableHighAccuracy: true
+        });
+
+
+
+
+
       }
       else {
         alert("Geolocation not enabled");
