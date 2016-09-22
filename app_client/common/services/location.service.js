@@ -17,7 +17,7 @@
     };
 
     errorAlert = function(error){
-      alert(error);
+      alert(error.code+" \n"+error.message);
     };
 
     return {
