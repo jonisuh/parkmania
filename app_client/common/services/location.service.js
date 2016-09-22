@@ -9,11 +9,15 @@
 
     var getLocation = function (successcallback) {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(successcallback);
+        navigator.geolocation.getCurrentPosition(successcallback, errorAlert );
       }
       else {
         alert("Geolocation not enabled");
       }
+    };
+
+    errorAlert = function(error){
+      alert(error);
     };
 
     return {
