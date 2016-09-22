@@ -36,13 +36,17 @@
 	}
 
 	vm.locationsuccess = function(position){
-		alert(position.coords.longitude+" "+position.coords.latitude);
 		vm.parking.lng = position.coords.longitude;
 		vm.parking.lat = position.coords.latitude;
 		$scope.$apply();
 	}
 
-	location.getLocation(vm.locationsuccess);
+	vm.locationerror = function(error){
+		vm.formError = "Error code: "+error.code+"\n"+error.message;
+		$scope.$apply();
+	}
+
+	location.getLocation(vm.locationsuccess, vm.locationerror);
 
   }
 
