@@ -1,6 +1,6 @@
 (function () {
 
-  angular.module('Parkmania', ['ngResource','ngRoute'])
+  angular.module('Parkmania', ['ngResource','ngRoute','ngMap','ui.bootstrap'])
     .config(['$routeProvider', '$locationProvider', config]);
 
 
@@ -29,6 +29,11 @@
 		.when('/parking', {
 		  templateUrl: '/parking/parking.view.html',
 		  controller: 'ParkingCtrl',
+		  controllerAs: 'vm'
+		})
+		.when('/parking/:id', {
+		  templateUrl: '/parking/parkingdetails.view.html',
+		  controller: 'ParkingspotDetailsCtrl',
 		  controllerAs: 'vm'
 		})
         .otherwise({

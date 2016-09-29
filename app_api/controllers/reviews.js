@@ -250,26 +250,6 @@ module.exports.modifyReview = function(req, res) {
 module.exports.deleteReview = function(req, res) {
 	 if(req.params && req.params.id && req.params.reviewid){
  		getUser(req, res, function(req, res, user){
- 			console.log("id "+req.params.reviewid);
- 			console.log(user);
-/*
- 			Review
-            .findById(req.params.reviewid, function (err, review) {
-                if (!review) {
-                    sendJSONresponse(res, 404, {
-                        "message": "review id not found"
-                    });
-                    return;
-                } else if (err) {
-                    console.log(err);
-                    sendJSONresponse(res, 404, err);
-                    return;
-                }
-                console.log(review);
-                sendJSONresponse(res, 200, review);
-            });
-
- 			*/
  			Review.findById(req.params.reviewid, function (err, review) {
  				console.log("review "+review);
                 if (!review) {
@@ -297,20 +277,7 @@ module.exports.deleteReview = function(req, res) {
 	                    console.log(err);
 	                    sendJSONresponse(res, 404, err);
 	                    return;
-	                } /*
-					console.log("removed from review collection");
-	                Parkingspot.update({_id: req.params.id},{ $pull: {reviews : { _id : req.params.reviewid }}},{ safe: true },
-				      function(err, obj) {
-				      	if(!obj){
-				      		console.log("the fug");
-				      	}
-				      	console.log(obj);
-				      	console.log("removed from parkingspot array");
-				        sendJSONresponse(res, 200, {
-	                        "deleted": review
-	                    });
-				     });
-					*/
+	                } 
 
 					Parkingspot.findByIdAndUpdate(req.params.id, {$pull: {reviews: req.params.reviewid}}, function(err, data){
 					  	console.log(err, data);
@@ -327,47 +294,9 @@ module.exports.deleteReview = function(req, res) {
 											    
 				});
 
-
-
             });
-/*
-            Review.remove({ _id: req.params.reviewid }, function(err, removed) {
-			    if (err) {
-                    console.log(err);
-                    sendJSONresponse(res, 404, err);
-                    return;
-                } /*
-				console.log("removed from review collection");
-                Parkingspot.update({_id: req.params.id},{ $pull: {reviews : { _id : req.params.reviewid }}},{ safe: true },
-			      function(err, obj) {
-			      	if(!obj){
-			      		console.log("the fug");
-			      	}
-			      	console.log(obj);
-			      	console.log("removed from parkingspot array");
-			        sendJSONresponse(res, 200, {
-                        "deleted": review
-                    });
-			     });
-				*/
-				/*				    
-			});
-
-
-			Parkingspot.findByIdAndUpdate(req.params.id, {$pull: {reviews: req.params.reviewid}}, function(err, data){
-			  	console.log(err, data);
-			  	if (err) {
-                    console.log(err);
-                    sendJSONresponse(res, 404, err);
-                    return;
-                }
-                sendJSONresponse(res, 200, {
-                    "deleted": data
-                });
-
-			});
-			*/
  		});
+
 	} else {
         console.log('No id');
         sendJSONresponse(res, 404, {

@@ -1,10 +1,10 @@
 (function(){
 	angular
 		.module('Parkmania')
-		.controller('LoginCtrl', loginCtrl);
+		.controller('loginModalController', loginModalController);
 
-	loginCtrl.$inject = ['$location','authentication'];
-	function loginCtrl($location, authentication){
+	loginModalController.$inject = ['authentication','$uibModalInstance'];
+	function loginModalController(authentication,$uibModalInstance){
 
 		var vm = this;
 		vm.pageHeader = {
@@ -15,8 +15,12 @@
 			email : "",
 			password : ""
 		};
-
-		vm.returnPage = $location.search().page || '/';
+		vm.modal = {
+			cancel : function() {
+				$uibModalInstance.dismiss('cancel');
+			}
+		};
+		//vm.returnPage = $location.search().page || '/';
 
 		vm.onSubmit = function() {
 			vm.formError = "";
@@ -36,8 +40,11 @@
 					vm.formError = err;
 				})
 				.then(function(){
+					vm.modal.cancel();
+					/*
 					$location.search('page', null);
 					$location.path(vm.returnPage);
+					*/
 				});
 		}
 	}

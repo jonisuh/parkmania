@@ -2,13 +2,27 @@
 <br>
 
 <div ng-hide="vm.isLoggedIn">
-	<a href="/login">Login</a>
+	<a ng-click="vm.showLoginModal()" href="#">Login</a>
 	<br>
 	<a href="/registration">Registration</a>
 </div>
+
+
+<ng-map center="Helsinki Finland" zoom="10">
+	<marker ng-repeat="spot in vm.parkingspots"
+        position="{{spot.coords[1]}},{{spot.coords[0]}}"
+        title="{{spot.address}}"></marker>
+</ng-map>
+
+<ul>
+  <li ng-click="vm.nearCurrentLocation()"><a href="#">Near me</a></li>
+  <li ng-click="vm.showAll()"><a href="#">All</a></li>
+  <li>Near location</li>
+</ul>
 
 <div ng-show="vm.isLoggedIn">
 	<span>Username: </span>{{ vm.currentUser.name }}
 	<br>
 	<a href="" ng-click="vm.logout()">Logout</a>
 </div>
+

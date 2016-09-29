@@ -30,14 +30,16 @@
 	};
 
 	vm.addParkingSpot = function(){
-		console.log(vm.parking);
+		//console.log(vm.parking);
 		parking.createParkingSpot(vm.parking);
 
 	}
 
 	vm.locationsuccess = function(position){
+		console.log(position);
 		vm.parking.lng = position.coords.longitude;
 		vm.parking.lat = position.coords.latitude;
+
 		$scope.$apply();
 	}
 
