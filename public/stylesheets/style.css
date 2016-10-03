@@ -1,19 +1,18 @@
 .angular-google-map-container {
-        height: 500px;
+	height: 500px;
 }
 
 body {
 	display:block;
-width: 60%;
-max-width: 900px;
-    margin-right: auto;
-    margin-left: auto;
+	max-width: 900px;
+	margin-right: auto;
+	margin-left: auto;
 
 }
 ng-map {
-        height:500px;
-		max-width: 900}
+	height:500px;
+	max-width: 900}
 
-.pac-container {
-	z-index:1051 !important;
-}
+	.pac-container {
+		z-index:1051 !important;
+	}
