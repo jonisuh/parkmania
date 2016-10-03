@@ -7,11 +7,10 @@ a {
   color: #00B7FF;
 }
 
-.angular-google-map-container {
-        height: 400px;
-}
-
-
 ng-map {
         height:500px;
+}
+
+.pac-container {
+    z-index: 1051 !important;
 }

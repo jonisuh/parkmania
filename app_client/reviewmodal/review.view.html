@@ -1,0 +1,64 @@
+<div class="container">
+<style>
+  .container{
+    width: 100%;
+  }
+  .glyphicon-star{
+    font-size: 25px;
+  }
+  .glyphicon-star-empty{
+    font-size: 25px;
+  }
+  .review-star{
+    display: inline-block;
+    cursor: pointer; cursor: hand; 
+  }
+  #datePickerContainer{
+    width:25%;
+    margin-bottom: 34px;
+    display: inline-block;
+  }
+  #timePicker{
+    display: inline-block;
+  }
+</style>
+  <p>{{vm.errorText}}</p>
+  <p> Leave a review for {{vm.parkingspot.address}}</p>
+  <div>
+    Rating:
+    <div class="review-star" ng-click="vm.changeRating(1)">
+     <span  ng-show="vm.rating >= 1" class="glyphicon glyphicon-star"></span><span ng-hide="vm.rating >= 1" class="glyphicon glyphicon-star-empty"></span>
+    </div>
+    <div class="review-star" ng-click="vm.changeRating(2)">
+      <span ng-show="vm.rating >= 2" class="glyphicon glyphicon-star"></span><span ng-hide="vm.rating >= 2" class="glyphicon glyphicon-star-empty"></span>
+    </div>
+    <div class="review-star" ng-click="vm.changeRating(3)">
+      <span ng-show="vm.rating >= 3" class="glyphicon glyphicon-star"></span><span ng-hide="vm.rating >= 3" class="glyphicon glyphicon-star-empty"></span>
+    </div>
+    <div class="review-star" ng-click="vm.changeRating(4)">
+      <span ng-show="vm.rating >= 4" class="glyphicon glyphicon-star"></span><span ng-hide="vm.rating >= 4" class="glyphicon glyphicon-star-empty"></span>
+    </div>
+    <div class="review-star" ng-click="vm.changeRating(5)">
+      <span ng-show="vm.rating >= 5" class="glyphicon glyphicon-star"></span><span ng-hide="vm.rating >= 5" class="glyphicon glyphicon-star-empty"></span>
+    </div>
+  </div>
+  <br>
+
+  <div class="timeDatePicker">
+    <div id="timePicker" uib-timepicker ng-model="vm.reviewDate" ng-change="vm.timeChanged()" hour-step="vm.hourStep" minute-step="vm.minuteStep" show-meridian="ismeridian"></div>
+
+    <p class="input-group" id="datePickerContainer">
+        <input type="text" style="width:100px" class="form-control" uib-datepicker-popup ng-model="vm.reviewDate" is-open="vm.datePickerOpened" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close"/>
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="vm.openDatepicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+      </p>
+  <div>
+
+  <br>
+  <textarea ng-model="vm.description" placeholder="Describe your experience" rows="4" cols="50">
+
+  </textarea>
+  <br>
+  <button class="btn btn-primary" ng-click="vm.postReview()">Add review</button>
+</div> 

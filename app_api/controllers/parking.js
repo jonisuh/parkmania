@@ -30,7 +30,7 @@ Finds a parking spot specified by the id
 module.exports.getParkingSpot = function(req, res) {
     if(req.params && req.params.id){
         Parkingspot
-            .findById(req.params.id, function (err, parkingspot) {
+            .findById(req.params.id).populate('reviews').exec(function (err, parkingspot) {
                 if (!parkingspot) {
                     sendJSONresponse(res, 404, {
                         "message": "parking id not found"

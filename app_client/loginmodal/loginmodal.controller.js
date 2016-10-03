@@ -20,7 +20,6 @@
 				$uibModalInstance.dismiss('cancel');
 			}
 		};
-		//vm.returnPage = $location.search().page || '/';
 
 		vm.onSubmit = function() {
 			vm.formError = "";
@@ -41,10 +40,6 @@
 				})
 				.then(function(){
 					vm.modal.cancel();
-					/*
-					$location.search('page', null);
-					$location.path(vm.returnPage);
-					*/
 				});
 		}
 	}

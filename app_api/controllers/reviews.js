@@ -43,6 +43,7 @@ module.exports.createReview = function(req, res) {
 	            if(req.body.description){
 	            	description = req.body.description;
 	            }
+
 	            var rating = parseInt(req.body.rating);
 				if(rating < 0){
 					rating = 0;
@@ -56,6 +57,10 @@ module.exports.createReview = function(req, res) {
 	            review.description = description;
 	            review.author = user;
 	            review.parkingspot = parkingspot;
+
+	            if(req.body.timestamp){
+	            	review.time = req.body.timestamp;
+	            }
 	            /*
 				console.log(parkingspot.reviews);
 				console.log("------TEST------");
@@ -157,7 +162,7 @@ returns all reviews for the parking spot
 module.exports.getReviews = function(req, res) {
 	 if(req.params && req.params.id){
         Parkingspot
-            .findById(req.params.id).populate('reviews').exec(function (err, parkingspot) {
+            .findById(req.params.id).populate('reviews').populate('author').exec(function (err, parkingspot) {
                 if (!parkingspot) {
                     sendJSONresponse(res, 404, {
                         "message": "review id not found"
@@ -169,7 +174,15 @@ module.exports.getReviews = function(req, res) {
                     return;
                 }
                 console.log(parkingspot);
-                sendJSONresponse(res, 200, parkingspot.reviews);
+
+                Review.populate(parkingspot.reviews,{
+                     path:'author', select: 'name' 
+
+                 },function(err,reviews){
+                    //mains[0].subs[0].members - is not empty
+
+	                sendJSONresponse(res, 200, reviews);
+                 });
 
             });
     } else {

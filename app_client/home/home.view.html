@@ -1,3 +1,5 @@
+
+<navigation></navigation>
 <h1>Parkmania</h1>
 <br>
 
@@ -7,17 +9,46 @@
 	<a href="/registration">Registration</a>
 </div>
 
-
 <ng-map center="Helsinki Finland" zoom="10">
 	<marker ng-repeat="spot in vm.parkingspots"
+		id="{{spot._id}}"
         position="{{spot.coords[1]}},{{spot.coords[0]}}"
-        title="{{spot.address}}"></marker>
+        title="{{spot.address}}"
+        on-click="vm.showInfoWindow()"
+        icon="{
+	        url:'images/parkingspot.png'
+      	}"></marker>
+        <info-window id="info">
+        <div class="container" style="width:200px">
+        	<p>{{vm.infoParkingSpot.address}}</p>
+
+        	<div>Rating: 
+	        	<span ng-hide="vm.infoCurrentRating == 'No ratings yet.'">
+		        	<span ng-show="vm.infoCurrentRating >= 1" class="glyphicon glyphicon-star"></span><span ng-hide="vm.infoCurrentRating >= 1" class="glyphicon glyphicon-star-empty"></span>
+		        	<span ng-show="vm.infoCurrentRating >= 2" class="glyphicon glyphicon-star"></span><span ng-hide="vm.infoCurrentRating >= 2" class="glyphicon glyphicon-star-empty"></span>
+		        	<span ng-show="vm.infoCurrentRating >= 3" class="glyphicon glyphicon-star"></span><span ng-hide="vm.infoCurrentRating >= 3" class="glyphicon glyphicon-star-empty"></span>
+		        	<span ng-show="vm.infoCurrentRating >= 4" class="glyphicon glyphicon-star"></span><span ng-hide="vm.infoCurrentRating >= 4" class="glyphicon glyphicon-star-empty"></span>
+		        	<span ng-show="vm.infoCurrentRating >= 5" class="glyphicon glyphicon-star"></span><span ng-hide="vm.infoCurrentRating >= 5" class="glyphicon glyphicon-star-empty"></span>
+	        	</span>
+	        	<span ng-show="vm.infoCurrentRating == 'No ratings yet.'">{{vm.infoCurrentRating}}</span>
+        	</div>
+        	<br>
+        	<div>
+				Time: <select ng-model="vm.infoTimeSelect" ng-change="vm.timeSelectChange()" ng-options="time.timespan as time.timespan for time in vm.ratingList"></select>
+			</div>
+			<br>
+			<button class="btn btn-primary" ng-click="vm.addReview(vm.clickedMarkerId)">Leave a review!</button>
+        </div>
+      	</info-window>
+
 </ng-map>
 
 <ul>
   <li ng-click="vm.nearCurrentLocation()"><a href="#">Near me</a></li>
   <li ng-click="vm.showAll()"><a href="#">All</a></li>
-  <li>Near location</li>
+  <li ng-click="vm.showResolverModal()">Near location</li>
+  <li ng-click="vm.addReview()" uib-popover="Please select a parkingspot to review."  popover-trigger="'click'" >Add review</li>
+  <p ng-show="vm.reviewSelection" >Please select a parkingspot to review.</p>
 </ul>
 
 <div ng-show="vm.isLoggedIn">
