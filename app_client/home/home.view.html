@@ -1,7 +1,7 @@
-
-<navigation></navigation>
 <h1>Parkmania</h1>
-<br>
+<navigation></navigation>
+
+<body>
 
 <div ng-hide="vm.isLoggedIn">
 	<a ng-click="vm.showLoginModal()" href="#">Login</a>
@@ -43,6 +43,14 @@
 
 </ng-map>
 
+<div class="btn-group btn-group-justified">
+<a href="#" class="btn btn-primary" ng-click="vm.nearCurrentLocation()">Find nearby</a>
+<a href="#" class="btn btn-primary" ng-click="vm.showAll()">Find all</a>
+<a href="#" class="btn btn-primary" ng-click="vm.showResolverModal()">Near address</a>
+<a href="#" class="btn btn-primary" ng-click="vm.addReview()" uib-popover="Please select a parkingspot to review."  popover-trigger="'click'">Add review</a>
+</div>
+
+<!--
 <ul>
   <li ng-click="vm.nearCurrentLocation()"><a href="#">Near me</a></li>
   <li ng-click="vm.showAll()"><a href="#">All</a></li>
@@ -55,5 +63,8 @@
 	<span>Username: </span>{{ vm.currentUser.name }}
 	<br>
 	<a href="" ng-click="vm.logout()">Logout</a>
-</div>
+</div>   -->
 
+</body>
+<br>
+<footer> <p>Parkmania™ by team Kiwi <p></footer>
