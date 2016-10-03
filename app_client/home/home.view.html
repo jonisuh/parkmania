@@ -1,13 +1,7 @@
-<h1>Parkmania</h1>
+
 <navigation></navigation>
 
 <body>
-
-<div ng-hide="vm.isLoggedIn">
-	<a ng-click="vm.showLoginModal()" href="#">Login</a>
-	<br>
-	<a href="/registration">Registration</a>
-</div>
 
 <ng-map center="Helsinki Finland" zoom="10">
 	<marker ng-repeat="spot in vm.parkingspots"
