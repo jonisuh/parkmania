@@ -82,6 +82,20 @@
 
     };
 
+  vm.showRegisterModal = function(){
+      var modalInstance = $uibModal.open({
+       templateUrl: '/registermodal/registermodal.view.html',
+       controller: 'registerModalController as vm',
+      });
+
+      modalInstance.closed.then(function () {
+        vm.checkLoggedIn();
+      });
+
+    };
+
+
+
     vm.showResolverModal = function(){
       var resolverModal = $uibModal.open({
        templateUrl: '/addressresolver/resolver.view.html',
