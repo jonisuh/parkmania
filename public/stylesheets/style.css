@@ -9,10 +9,16 @@ body {
 	margin-left: auto;
 
 }
+.navbar{
+	margin: auto;
+	max-width: 900px;
+}
 ng-map {
 	height:500px;
-	max-width: 900}
+	max-width: 900px;
+	margin-top: 50px;
+}
 
-	.pac-container {
-		z-index:1051 !important;
-	}
+.pac-container {
+	z-index:1051 !important;
+}
