@@ -39,6 +39,7 @@
 					vm.formError = err;
 				})
 				.then(function(){
+					$('.navbar-collapse').collapse('hide')
 					vm.modal.cancel();
 				});
 		}

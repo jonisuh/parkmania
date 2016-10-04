@@ -19,6 +19,7 @@
     vm.logout = function(){
       authentication.logout();
       vm.checkLoggedIn();
+      $('.navbar-collapse').collapse('hide')
     };
     
     vm.showAll = function(){
@@ -33,6 +34,13 @@
       $resource('/api/parkingspot/all').query(function(parkingspots){
         vm.parkingspots = parkingspots;
       });
+    };
+
+    vm.mapClick = function(event) {
+      if(vm.reviewSelection === true){
+        vm.reviewSelection = false;
+        console.log(event.latLng);
+      }
     };
 
     vm.nearCurrentLocation = function(){

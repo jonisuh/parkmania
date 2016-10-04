@@ -3,7 +3,7 @@
 
 <body>
 
-<ng-map center="Helsinki Finland" zoom="10">
+<ng-map center="Helsinki Finland" zoom="10" on-click="vm.mapClick($event)">
 	<marker ng-repeat="spot in vm.parkingspots"
 		id="{{spot._id}}"
         position="{{spot.coords[1]}},{{spot.coords[0]}}"
@@ -46,7 +46,7 @@
 <a href="#" class="btn btn-primary" ng-click="vm.nearCurrentLocation()">Find nearby</a>
 <a href="#" class="btn btn-primary" ng-click="vm.showAll()">Find all</a>
 <a href="#" class="btn btn-primary" ng-click="vm.showResolverModal()">Near address</a>
-<a href="#" class="btn btn-primary" ng-click="vm.addReview()" uib-popover="Please select a parkingspot to review."  popover-trigger="'click'">Add review</a>
+<a href="#" class="btn btn-primary" ng-click="vm.addReview()" uib-popover="Please select a parkingspot to review."  popover-append-to-body="true" popover-trigger="'focus'">Add review</a>
 </div>
 
 <!--
