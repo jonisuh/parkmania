@@ -75,6 +75,7 @@
 
     vm.locationerror = function(error){
       vm.formError = "Error code: "+error.code+"\n"+error.message;
+      vm.alerts.push({type: 'danger', msg: 'Error:'+error.code+'\n'+error.message});
       $scope.$apply();
     };
 
@@ -232,6 +233,12 @@
           }
         });
     }
+
+
+
+    vm.closeAlert = function(index) {
+      vm.alerts.splice(index, 1);
+    };
 
     vm.checkLoggedIn();
 

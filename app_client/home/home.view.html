@@ -1,8 +1,9 @@
 
-<navigation></navigation>
+
 
 <body>
-
+<navigation></navigation>
+ <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="vm.closeAlert($index)">{{alert.msg}}</div>
 <ng-map center="Helsinki Finland" zoom="10" on-click="vm.mapClick($event)">
 	<marker ng-repeat="spot in vm.parkingspots"
 		id="{{spot._id}}"
