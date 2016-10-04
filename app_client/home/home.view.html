@@ -18,6 +18,11 @@
         icon="{
 	        url:'images/parkingspot.png'
       	}"></marker>
+
+      	<shape id="circle" name="circle" centered="true"
+      stroke-color='#FF0000' stroke-opacity="0" stroke-weight="0"
+      center="{{vm.circleCenter}}" radius="{{vm.searchRadius}}"></shape>
+
         <info-window id="info">
         <div class="container" style="width:200px">
         	<p>{{vm.infoParkingSpot.address}}</p>

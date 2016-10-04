@@ -70,7 +70,7 @@ module.exports.getParkingSpotsNear = function(req, res) {
     };
     var options = {
         spherical: true,
-        maxDistance: parseFloat(req.query.maxdist) * 1000,
+        maxDistance: parseFloat(req.query.maxdist),
         num: parseInt(req.query.results)
     };
 

@@ -24,6 +24,10 @@
     vm.showAll = function(){
       vm.parkingspots = [];
       latlng = new google.maps.LatLng(60.16985569999999, 24.93837899999994);
+
+      vm.searchRadius = 0;
+      vm.circleCenter = latlng;
+
       map.setCenter(latlng);
       map.setZoom(10);
       $resource('/api/parkingspot/all').query(function(parkingspots){
@@ -39,8 +43,10 @@
     vm.locationsuccess = function(position){
       latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       map.setCenter(latlng);
+      vm.searchRadius = 100;
+      vm.circleCenter = latlng;
       map.setZoom(14);
-      $resource('/api/parkingspot?lng='+position.coords.longitude+'&lat='+position.coords.latitude+'&maxdist=0.1&results=5').query(function(parkingspots){
+      $resource('/api/parkingspot?lng='+position.coords.longitude+'&lat='+position.coords.latitude+'&maxdist='+vm.searchRadius+'&results=5').query(function(parkingspots){
         vm.parkingspots = parkingspots;
       });
     };
@@ -49,8 +55,12 @@
       vm.parkingspots = [];
       latlng = new google.maps.LatLng(location.lat, location.lng);
       map.setCenter(latlng);
+
+      vm.searchRadius = 100;
+      vm.circleCenter = latlng;
+
       map.setZoom(15);
-      $resource('/api/parkingspot?lng='+location.lng+'&lat='+location.lat+'&maxdist=1&results=5').query(function(parkingspots){
+      $resource('/api/parkingspot?lng='+location.lng+'&lat='+location.lat+'&maxdist='+vm.searchRadius+'&results=5').query(function(parkingspots){
         vm.parkingspots = parkingspots;
       });
     };
@@ -75,7 +85,7 @@
     vm.showResolverModal = function(){
       var resolverModal = $uibModal.open({
        templateUrl: '/addressresolver/resolver.view.html',
-       controller: 'resolverController as vm',
+       controller: 'resolverController as vm'
       });
 
       resolverModal.result.then(function (addresscoords) {
@@ -174,6 +184,7 @@
     vm.addReview = function(id){
       console.log(id);
       map.hideInfoWindow('info');
+      vm.reviewAdd = true;
       if(id){
         vm.openReviewModal(id);
       }else{
