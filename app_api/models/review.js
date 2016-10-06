@@ -9,10 +9,10 @@ var reviewschema = new Schema({
 	},
     description : String,
     time : { type : Date, default: Date.now },
-    author : [{
+    author : {
     	type: Schema.Types.ObjectId,
         ref: 'User'
-    }],
+    },
     parkingspot : {
     	type: Schema.Types.ObjectId
     }

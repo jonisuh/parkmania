@@ -108,7 +108,7 @@
       map.setCenter(latlng);
       vm.searchRadius = 300;
       vm.circleCenter = latlng;
-      map.setZoom(14);
+      map.setZoom(15);
       $resource('/api/parkingspot?lng='+position.coords.longitude+'&lat='+position.coords.latitude+'&maxdist='+vm.searchRadius+'&results=5').query(function(parkingspots){
         vm.parkingspots = parkingspots;
       });
@@ -257,6 +257,37 @@
         if(vm.infoTimeSelect === vm.ratingList[i].timespan){
           vm.infoCurrentRating = vm.ratingList[i].rating;
         }
+      }
+
+      selectedTimeSpan = vm.infoTimeSelect.split("-");
+      //console.log(selectedTimeSpan);
+
+      vm.newestReview = null;
+
+      for(i in vm.infoParkingSpot.reviews){
+        timestamp = new Date(Date.parse(vm.infoParkingSpot.reviews[i].time));
+
+        //console.log(timestamp.getHours());
+        if((timestamp.getHours() >= selectedTimeSpan[0]) && (timestamp.getHours() < selectedTimeSpan[1])){
+          if(!vm.newestReview){
+            //console.log("earliest review placed"+timestamp);
+            vm.newestReview = vm.infoParkingSpot.reviews[i];
+          }else{ 
+            earliestReviewTime = new Date(Date.parse(vm.newestReview.time));
+            //console.log("earliest : "+earliestReviewTime.getTime()+"--"+earliestReviewTime+"\nchecked : "+timestamp.getTime()+"--"+timestamp);
+            if(timestamp.getTime() > earliestReviewTime.getTime()){
+              //console.log("newer review found");
+              vm.newestReview = vm.infoParkingSpot.reviews[i];
+            }
+          }
+        }
+
+      }
+      //console.log(vm.newestReview);
+      if(vm.newestReview){
+        timestamp = new Date(Date.parse(vm.newestReview.time));
+        formattedTime = timestamp.getHours()+":"+timestamp.getMinutes()+" "+timestamp.getDate()+"."+(timestamp.getMonth()+1)+"."+timestamp.getFullYear();
+        vm.newestReview.time = formattedTime;
       }
     };
 
