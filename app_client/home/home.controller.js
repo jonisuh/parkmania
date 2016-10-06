@@ -160,7 +160,6 @@
     };
 
 
-
     vm.showResolverModal = function(){
       var resolverModal = $uibModal.open({
        templateUrl: '/addressresolver/resolver.view.html',
@@ -262,7 +261,6 @@
 
     vm.addReview = function(id){
       vm.searchRadius = 0;
-      console.log(id);
       map.hideInfoWindow('info');
       map.hideInfoWindow('newSpotInfo');
       vm.reviewAdd = true;
