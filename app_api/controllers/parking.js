@@ -80,7 +80,7 @@ module.exports.getParkingSpotsNear = function(req, res) {
         }else{
             console.log(results);
             var parkingspots = parkingSpotsAsList(req, res, results, stats);
-            sendJSONresponse(res, 200, parkingspots);
+                sendJSONresponse(res, 200, parkingspots);
         }
     });
 };
@@ -122,9 +122,7 @@ module.exports.addParkingSpot = function(req, res) {
             sendJSONresponse(res, 404, err);
         }else{
             console.log(parkingspot);
-            sendJSONresponse(res, 201, {
-                'parkingspot' : parkingspot.address +" "+parkingspot.coords
-            });
+            sendJSONresponse(res, 201, parkingspot);
         }
     });
 

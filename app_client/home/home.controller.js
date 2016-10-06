@@ -5,11 +5,12 @@
     .module('Parkmania')
     .controller('HomeCtrl', homeCtrl);
 
-  homeCtrl.$inject = ['$location','$resource','$route','$scope','$uibModal', 'authentication','location','NgMap'];
-  function homeCtrl ($location,$resource,$route,$scope,$uibModal,authentication, location, NgMap) {
+  homeCtrl.$inject = ['$http','$location','$resource','$route','$scope','$uibModal', 'authentication','location','NgMap'];
+  function homeCtrl ($http, $location,$resource,$route,$scope,$uibModal,authentication, location, NgMap) {
     
     var vm = this;
     var map;
+    var geocoder = new google.maps.Geocoder;
     NgMap.getMap().then(function(evtMap) {
       map = evtMap;
 
@@ -37,11 +38,65 @@
     };
 
     vm.mapClick = function(event) {
+      map.hideInfoWindow('info');
       if(vm.reviewSelection === true){
-        vm.reviewSelection = false;
-        console.log(event.latLng);
+        vm.selectedCoordinates = event.latLng;
+        $resource('/api/parkingspot?lng='+event.latLng.lng()+'&lat='+event.latLng.lat()+'&maxdist=50&results=1').query(function(parkingspots){
+          
+          if(parkingspots[0]){
+            vm.reviewSelection = false;
+            vm.openReviewModal(parkingspots[0]._id);
+          }else{
+            map.showInfoWindow('newSpotInfo',event.latLng);
+          }
+        });
+
       }
     };
+
+    vm.createNewSpot = function(){
+      vm.reviewSelection = false;
+      if(vm.selectedCoordinates){
+        geocoder.geocode({'location': vm.selectedCoordinates}, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+              
+              newspot = {
+                address : results[0].formatted_address,
+                lng : vm.selectedCoordinates.lng(),
+                lat : vm.selectedCoordinates.lat()
+              }; 
+
+              $http.post('/api/parkingspot/', newspot, {
+                headers: {
+                  Authorization: 'Bearer '+ authentication.getToken()
+                }
+              }).success(function (data, status, headers, config) {
+                vm.parkingspots[vm.parkingspots.length] = data;
+                map.hideInfoWindow('newSpotInfo');
+                vm.openReviewModal(data._id);
+
+              }).error(function (data, status, header, config) {
+                console.log(status);
+                vm.errorText = "Error while posting a review";
+              });
+            } else {
+              //window.alert('No results found');
+            }
+          } else {
+            //window.alert('Geocoder failed due to: ' + status);
+          }
+        });
+
+        
+      }
+    };
+
+
+    vm.closeNewSpotInfo = function(){
+      map.hideInfoWindow('newSpotInfo');
+    };
+
 
     vm.nearCurrentLocation = function(){
       vm.parkingspots = [];
@@ -51,7 +106,7 @@
     vm.locationsuccess = function(position){
       latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       map.setCenter(latlng);
-      vm.searchRadius = 100;
+      vm.searchRadius = 300;
       vm.circleCenter = latlng;
       map.setZoom(14);
       $resource('/api/parkingspot?lng='+position.coords.longitude+'&lat='+position.coords.latitude+'&maxdist='+vm.searchRadius+'&results=5').query(function(parkingspots){
@@ -64,16 +119,17 @@
       latlng = new google.maps.LatLng(location.lat, location.lng);
       map.setCenter(latlng);
 
-      vm.searchRadius = 100;
+      vm.searchRadius = 300;
       vm.circleCenter = latlng;
 
       map.setZoom(15);
-      $resource('/api/parkingspot?lng='+location.lng+'&lat='+location.lat+'&maxdist='+vm.searchRadius+'&results=5').query(function(parkingspots){
+      $resource('/api/parkingspot?lng='+location.lng+'&lat='+location.lat+'&maxdist='+vm.searchRadius+'&results=10').query(function(parkingspots){
         vm.parkingspots = parkingspots;
       });
     };
 
     vm.locationerror = function(error){
+      vm.alerts = [];
       vm.formError = "Error code: "+error.code+"\n"+error.message;
       vm.alerts.push({type: 'danger', msg: 'Error:'+error.code+'\n'+error.message});
       $scope.$apply();
@@ -205,8 +261,10 @@
     };
 
     vm.addReview = function(id){
+      vm.searchRadius = 0;
       console.log(id);
       map.hideInfoWindow('info');
+      map.hideInfoWindow('newSpotInfo');
       vm.reviewAdd = true;
       if(id){
         vm.openReviewModal(id);

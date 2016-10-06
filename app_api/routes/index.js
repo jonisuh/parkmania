@@ -15,7 +15,7 @@ router.get('/api/parkingspot/all', ctrlPark.getAllParkingSpots);
 router.get('/api/parkingspot', ctrlPark.getParkingSpotsNear);
 router.get('/api/parkingspot/:id',  ctrlPark.getParkingSpot);
 router.get('/api/parkingspot/',  ctrlPark.getParkingSpot);
-router.post('/api/parkingspot',  ctrlPark.addParkingSpot);
+router.post('/api/parkingspot', auth,  ctrlPark.addParkingSpot);
 /*
 router.put('/api/parkingspot/:id',  ctrlPark.);
 router.delete('/api/parkingspot/:id',  ctrlPark.);

@@ -8,9 +8,10 @@
 		var vm = this;
 		vm.placeChanged = function() {
 		    vm.place = this.getPlace();
-		}
+		/*}
 
-		vm.return = function() {
+		vm.return = function() { */
+
 			console.log(vm.place);
 			if(vm.place.geometry){
 				addresscoords = vm.place.geometry.location.toJSON();

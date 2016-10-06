@@ -37,6 +37,15 @@
 			<button class="btn btn-primary" ng-click="vm.addReview(vm.clickedMarkerId)">Leave a review!</button>
         </div>
       	</info-window>
+      	<info-window id="newSpotInfo">
+	        <div class="container" style="width:250px">
+	        	<p>No parking spot found at this location, are you sure you want to leave a review here?</p>
+	        	
+					<a href="#" class="btn btn-success btn-sm" ng-click="vm.createNewSpot()">Add review</a>
+					<a href="#" class="btn btn-danger btn-sm" ng-click="vm.closeNewSpotInfo()">Select another spot</a>
+			
+	        </div>
+      	</info-window>
 
 </ng-map>
 
