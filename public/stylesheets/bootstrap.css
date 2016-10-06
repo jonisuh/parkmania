@@ -1616,6 +1616,8 @@ pre code {
   padding-right: 15px;
 }
 .row {
+  margin-top: 5px;
+  margin-bottom: 5px;
   margin-left: -15px;
   margin-right: -15px;
 }
