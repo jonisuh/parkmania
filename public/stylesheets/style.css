@@ -22,3 +22,10 @@ ng-map {
 .pac-container {
 	z-index:1051 !important;
 }
+
+.glyphicon-star{
+	color: #d34615;
+}
+.glyphicon-star-empty{
+	color: #d34615;
+}

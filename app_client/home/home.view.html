@@ -34,6 +34,22 @@
 				Time: <select ng-model="vm.infoTimeSelect" ng-change="vm.timeSelectChange()" ng-options="time.timespan as time.timespan for time in vm.ratingList"></select>
 			</div>
 			<br>
+			<!-- NEWEST REVIEW -->
+			<div ng-show="vm.newestReview">
+				<p>Posted by: {{vm.newestReview.author.name}}</p>
+				<p>On {{vm.newestReview.time}}</p>
+
+				<span>
+		        	<span ng-show="vm.newestReview.rating >= 1" class="glyphicon glyphicon-star"></span><span ng-hide="vm.newestReview.rating >= 1" class="glyphicon glyphicon-star-empty"></span>
+		        	<span ng-show="vm.newestReview.rating >= 2" class="glyphicon glyphicon-star"></span><span ng-hide="vm.newestReview.rating >= 2" class="glyphicon glyphicon-star-empty"></span>
+		        	<span ng-show="vm.newestReview.rating >= 3" class="glyphicon glyphicon-star"></span><span ng-hide="vm.newestReview.rating >= 3" class="glyphicon glyphicon-star-empty"></span>
+		        	<span ng-show="vm.newestReview.rating >= 4" class="glyphicon glyphicon-star"></span><span ng-hide="vm.newestReview.rating >= 4" class="glyphicon glyphicon-star-empty"></span>
+		        	<span ng-show="vm.newestReview.rating >= 5" class="glyphicon glyphicon-star"></span><span ng-hide="vm.newestReview.rating >= 5" class="glyphicon glyphicon-star-empty"></span>
+	        	</span>
+
+				<p>Description: {{vm.newestReview.description}}</p>
+			</div>
+
 			<button class="btn btn-primary" ng-click="vm.addReview(vm.clickedMarkerId)">Leave a review!</button>
         </div>
       	</info-window>

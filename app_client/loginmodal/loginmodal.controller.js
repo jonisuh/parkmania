@@ -25,7 +25,6 @@
 			vm.formError = "";
 			if (!vm.credentials.email || !vm.credentials.password){
 				vm.formError = "All fields required, please try again";
-				alert("All fields required, please try again");
 				return false;		
 			}else{
 				vm.doLogin();

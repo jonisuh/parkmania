@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 var passport = require('passport');
 var Parkingspot = mongoose.model('Parkingspot');
+var Review = mongoose.model('Review');
 
 var sendJSONresponse = function(res, status, content) {
   res.status(status);
@@ -30,7 +31,7 @@ Finds a parking spot specified by the id
 module.exports.getParkingSpot = function(req, res) {
     if(req.params && req.params.id){
         Parkingspot
-            .findById(req.params.id).populate('reviews').exec(function (err, parkingspot) {
+            .findById(req.params.id).populate('reviews').populate('author').exec(function (err, parkingspot) {
                 if (!parkingspot) {
                     sendJSONresponse(res, 404, {
                         "message": "parking id not found"
@@ -42,7 +43,15 @@ module.exports.getParkingSpot = function(req, res) {
                     return;
                 }
                 console.log(parkingspot);
-                sendJSONresponse(res, 200, parkingspot);
+                //sendJSONresponse(res, 200, parkingspot);
+                Review.populate(parkingspot.reviews,{
+                     path:'author', select: 'name' 
+
+                 },function(err,reviews){
+                    //mains[0].subs[0].members - is not empty
+                    parkingspot.reviews = reviews;
+                    sendJSONresponse(res, 200, parkingspot);
+                 });
             });
     } else {
         console.log('No id');
