@@ -1,5 +1,5 @@
 .angular-google-map-container {
-	height: 450px;
+	height: 400px;
 }
 
 body {
@@ -14,7 +14,7 @@ body {
 	max-width: 900px;
 }
 ng-map {
-	height:450px;
+	height:400px;
 	max-width: 900px;
 	margin-top: 50px;
 }
