@@ -2,10 +2,10 @@
   <page-header content="vm.pageHeader"></page-header>
 
   <div class="row">
-    <div class="col-md-6 col-sm-12">
+    <div class="col-md-6 col-sm-8">
     <p class="lead">Enter credentials to create a new user</p>
     <!--  <p class="lead">Already a member? Please <a href="/#login?page={{ vm.returnPage }}">log in</a> instead.</p> -->
-      <form class="bs-component" ng-submit="vm.onSubmit()">
+      <form ng-submit="vm.onSubmit()">
         <div role="alert" ng-show="vm.formError" class="alert alert-danger">{{ vm.formError }}</div>
         <div class="form-group">
           <label for="name">Full name</label>
