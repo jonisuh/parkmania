@@ -51,6 +51,8 @@
 				</blockquote>
 				
 			</div>
+			<p ng-hide="vm.newestReview">No reviews for the selected time span.</p>
+			<a href="#" ng-click="vm.createNewSpot()">Show all reviews</a>
 			<button class="btn btn-primary" ng-click="vm.addReview(vm.clickedMarkerId)">Leave a review!</button>
 		</div>
 	</info-window>
