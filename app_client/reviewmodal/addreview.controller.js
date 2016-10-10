@@ -26,27 +26,40 @@
 		};
 
 		vm.postReview = function(){
-			review = {
-				rating : vm.rating,
-				description : vm.description,
-				timestamp : vm.reviewDate
-			};
+			if(!vm.rating){
+            	vm.alertType = "danger";
+				vm.alertText = "Please select a rating.";
+			}else{
+			
+				review = {
+					rating : vm.rating,
+					description : vm.description,
+					timestamp : vm.reviewDate
+				};
 
-			$http.post('/api/parkingspot/'+spotId+/review/, review, {
-		        headers: {
-		          Authorization: 'Bearer '+ authentication.getToken()
-		        }
-			}).success(function (data, status, headers, config) {
-				vm.errorText = "Review added!";
-            })
-            .error(function (data, status, header, config) {
-            	console.log(status);
-            	vm.errorText = "Error while posting a review";
-            });
+				$http.post('/api/parkingspot/'+spotId+/review/, review, {
+			        headers: {
+			          Authorization: 'Bearer '+ authentication.getToken()
+			        }
+				}).success(function (data, status, headers, config) {
+					vm.alertType = "success";
+					vm.alertText = "Review added!";
+					setTimeout(function(){ vm.closeModal() }, 1500);
+	            })
+	            .error(function (data, status, header, config) {
+	            	console.log(status);
+	            	vm.alertType = "danger";
+					vm.alertText = "Error while posting a review";
+	            });
+        	}
 		};
 
 		vm.openDatepicker = function(){
 			vm.datePickerOpened = true;
+		};
+		
+		vm.closeModal = function(){
+			$uibModalInstance.dismiss('cancel');
 		};
 		
 	}

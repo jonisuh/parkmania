@@ -33,3 +33,23 @@ ng-map {
 blockquote{
 	font-size: 85%;
 }
+blockquote .small:before, blockquote footer:before, blockquote small:before {
+    content: none;
+}
+
+blockquote footer:before, blockquote small:before, blockquote .small:before {
+    content: none;
+}
+
+.exit-btn{
+	color: #ffffff;
+    background-color: #e95420;
+    border-color: #e95420;
+}
+.gm-style-mtc {
+  display: none;
+}
+
+.gm-style-cc{
+  display: none;
+}

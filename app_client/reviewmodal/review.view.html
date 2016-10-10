@@ -2,6 +2,7 @@
 <style>
   .container{
     width: 100%;
+    margin-bottom: 10px;
   }
   .glyphicon-star{
     font-size: 25px;
@@ -22,8 +23,12 @@
     display: inline-block;
   }
 </style>
-  <p>{{vm.errorText}}</p>
-  <p> Leave a review for {{vm.parkingspot.address}}</p>
+
+  <div class="header" style="width: 100%; display: block;">
+    <h1 style="font-size:20px; display: inline-block; max-width: 85%"> Leave a review for {{vm.parkingspot.address}}</h1> 
+    <button style="float: right; margin-top: 22px;" class="btn btn-sm exit-btn" ng-click="vm.closeModal()"><span class="glyphicon glyphicon glyphicon-remove"></span></button>
+  </div>
+
   <div>
     Rating:
     <div class="review-star" ng-click="vm.changeRating(1)">
@@ -60,5 +65,14 @@
 
   </textarea>
   <br>
-  <button class="btn btn-primary" ng-click="vm.postReview()">Add review</button>
+  <button style="margin-bottom: 10px;" class="btn btn-primary" ng-click="vm.postReview()">Add review</button>
+
+  <div style="margin-bottom: 0px;" ng-show="vm.alertType == 'success'" class="alert alert-success">
+    {{vm.alertText}}
+  </div>
+
+  <div style="margin-bottom: 0px;" ng-show="vm.alertType == 'danger'" class="alert alert-danger">
+    {{vm.alertText}}
+  </div>
+
 </div> 

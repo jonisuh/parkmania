@@ -1,6 +1,7 @@
 <body>
-	<navigation></navigation>
-	<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="vm.closeAlert($index)" style="margin-top: 50px">{{alert.msg}}</div>
+	<navigation popover-placement='bottom-left' popover-is-open="vm.alertPopoverVisible" uib-popover-html="vm.alertMessage"></navigation>
+
+
 	<ng-map center="Helsinki Finland" zoom="10" on-click="vm.mapClick($event)">
 		<marker ng-repeat="spot in vm.parkingspots"
 		id="{{spot._id}}"
@@ -16,8 +17,8 @@
 	center="{{vm.circleCenter}}" radius="{{vm.searchRadius}}"></shape>
 
 	<info-window id="info">
-		<div class="container" style="width:200px">
-			<p>{{vm.infoParkingSpot.address}}</p>
+		<div class="container" style="min-width:200px; max-width:300px ">
+			<p style="max-width: 200px">{{vm.infoParkingSpot.address}}</p>
 
 			<div>Rating: 
 				<span ng-hide="vm.infoCurrentRating == 'No ratings yet.'">
@@ -51,8 +52,9 @@
 				</blockquote>
 				
 			</div>
-			<p ng-hide="vm.newestReview">No reviews for the selected time span.</p>
-			<a href="#" ng-click="vm.createNewSpot()">Show all reviews</a>
+			<p style="max-width: 200px" ng-hide="vm.newestReview || vm.infoParkingSpot.reviews.length == 0">No reviews for the selected time span.</p>
+			<p style="max-width: 200px" ng-show="vm.infoParkingSpot.reviews.length == 0">No reviews for the parking spot.</p>
+			<a style="display: block" ng-show="vm.infoParkingSpot.reviews.length > 0"#" ng-click="vm.showAllReviews()">Show all reviews</a>
 			<button class="btn btn-primary" ng-click="vm.addReview(vm.clickedMarkerId)">Leave a review!</button>
 		</div>
 	</info-window>
@@ -72,10 +74,8 @@
 	<a href="#" class="btn btn-primary" ng-click="vm.nearCurrentLocation()">Find nearby</a>
 	<a href="#" class="btn btn-primary" ng-click="vm.showAll()">Find all</a>
 	<a href="#" class="btn btn-primary" ng-click="vm.showResolverModal()">Near address</a>
-	<a href="#" class="btn btn-primary" ng-click="vm.addReview()" uib-popover="Please select a parkingspot to review."  popover-append-to-body="true" popover-trigger="'focus'">Add review</a>
+	<a href="#" class="btn btn-primary" ng-click="vm.addReview()">Add review</a>
 </div>
-
-
 </body>
 <br>
 <footer> <p>Parkmania™ by team Kiwi <p></footer>

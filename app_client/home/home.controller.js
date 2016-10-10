@@ -5,17 +5,18 @@
     .module('Parkmania')
     .controller('HomeCtrl', homeCtrl);
 
-  homeCtrl.$inject = ['$http','$location','$resource','$route','$scope','$uibModal', 'authentication','location','NgMap'];
-  function homeCtrl ($http, $location,$resource,$route,$scope,$uibModal,authentication, location, NgMap) {
+  homeCtrl.$inject = ['$http','$location','$resource','$route','$scope','$uibModal', 'authentication','location','NgMap', '$sce'];
+  function homeCtrl ($http, $location,$resource,$route,$scope,$uibModal,authentication, location, NgMap, $sce) {
     
     var vm = this;
     var map;
     var geocoder = new google.maps.Geocoder;
     NgMap.getMap().then(function(evtMap) {
       map = evtMap;
-
       vm.showAll();
     });
+
+    vm.alertPopoverVisible = false;
 
     vm.logout = function(){
       authentication.logout();
@@ -25,6 +26,7 @@
     
     vm.showAll = function(){
       vm.parkingspots = [];
+      vm.alertPopoverVisible = false;
       latlng = new google.maps.LatLng(60.16985569999999, 24.93837899999994);
 
       vm.searchRadius = 0;
@@ -39,6 +41,7 @@
 
     vm.mapClick = function(event) {
       map.hideInfoWindow('info');
+      vm.alertPopoverVisible = false;
       if(vm.reviewSelection === true){
         vm.selectedCoordinates = event.latLng;
         $resource('/api/parkingspot?lng='+event.latLng.lng()+'&lat='+event.latLng.lat()+'&maxdist=50&results=1').query(function(parkingspots){
@@ -47,6 +50,7 @@
             vm.reviewSelection = false;
             vm.openReviewModal(parkingspots[0]._id);
           }else{
+            vm.reviewSelection = false;
             map.showInfoWindow('newSpotInfo',event.latLng);
           }
         });
@@ -94,16 +98,20 @@
 
 
     vm.closeNewSpotInfo = function(){
+      vm.reviewSelection = true;
       map.hideInfoWindow('newSpotInfo');
     };
 
 
     vm.nearCurrentLocation = function(){
+      vm.alertPopoverVisible = true;
+      vm.alertMessage = $sce.trustAsHtml('<div>Finding location...</div>');
       vm.parkingspots = [];
       location.getLocation(vm.locationsuccess, vm.locationerror);
     };
 
     vm.locationsuccess = function(position){
+      vm.alertPopoverVisible = false;
       latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       map.setCenter(latlng);
       vm.searchRadius = 300;
@@ -111,6 +119,10 @@
       map.setZoom(15);
       $resource('/api/parkingspot?lng='+position.coords.longitude+'&lat='+position.coords.latitude+'&maxdist='+vm.searchRadius+'&results=5').query(function(parkingspots){
         vm.parkingspots = parkingspots;
+        if(parkingspots.length == 0){
+          vm.alertPopoverVisible = true;
+          vm.alertMessage = $sce.trustAsHtml('<div><p>No parkingspots found near your location.</p></div>');
+        }
       });
     };
     
@@ -125,13 +137,16 @@
       map.setZoom(15);
       $resource('/api/parkingspot?lng='+location.lng+'&lat='+location.lat+'&maxdist='+vm.searchRadius+'&results=10').query(function(parkingspots){
         vm.parkingspots = parkingspots;
+        if(parkingspots.length == 0){
+          vm.alertPopoverVisible = true;
+          vm.alertMessage = $sce.trustAsHtml('<div><p>No parkingspots found near your location.</p></div>');
+        }
       });
     };
 
     vm.locationerror = function(error){
-      vm.alerts = [];
-      vm.formError = "Error code: "+error.code+"\n"+error.message;
-      vm.alerts.push({type: 'danger', msg: 'Error:'+error.code+'\n'+error.message});
+      vm.alertPopoverVisible = true;
+      vm.alertMessage = $sce.trustAsHtml('<div><p>The application could not determine your location.\nPlease check the GPS settings in your device.</p></div>');
       $scope.$apply();
     };
 
@@ -182,6 +197,7 @@
 
     vm.showInfoWindow= function(evt) {
       vm.clickedMarkerId = this.id;
+      vm.alertPopoverVisible = false;
       if(vm.reviewSelection === true){
         vm.reviewSelection = false;
         vm.openReviewModal(this.id);
@@ -189,9 +205,10 @@
         $resource('/api/parkingspot/:id', {id: '@_id'}).get({ id: this.id}, function(parkingspot){
           vm.infoParkingSpot = parkingspot;
           vm.createRatingList(vm.infoParkingSpot.reviews);
+          map.showInfoWindow('info',vm.clickedMarkerId);
         });
 
-        map.showInfoWindow('info',this.id);
+        //map.showInfoWindow('info',this.id);
       }
     };
 
@@ -282,11 +299,24 @@
         }
 
       }
-      //console.log(vm.newestReview);
+
       if(vm.newestReview){
         timestamp = new Date(Date.parse(vm.newestReview.time));
         formattedTime = timestamp.getHours()+":"+timestamp.getMinutes()+" "+timestamp.getDate()+"."+(timestamp.getMonth()+1)+"."+timestamp.getFullYear();
-        vm.newestReview.time = formattedTime;
+        //vm.newestReview.time = formattedTime;
+
+        tempReview = {
+          _id : vm.newestReview._id,
+          author: {
+            _id: vm.newestReview.author._id,
+            name : vm.newestReview.author.name
+          },
+          description : vm.newestReview.description,
+          rating : parseInt(vm.newestReview.rating),
+          time : formattedTime
+        }
+        vm.newestReview = tempReview;
+
       }
     };
 
@@ -299,6 +329,8 @@
         vm.openReviewModal(id);
       }else{
         vm.reviewSelection = true;
+        vm.alertPopoverVisible = true;
+        vm.alertMessage = $sce.trustAsHtml('<div>Please select a parkingspot to review.</div>');
       }
     }
 
@@ -321,10 +353,20 @@
         });
     }
 
+    vm.showAllReviews = function(){
+      var allReviews = $uibModal.open({
+       templateUrl: '/allreviews/allreviews.view.html',
+       controller: 'allReviewsController as vm',
+        resolve: {
+         spotId: function () {
+           return vm.infoParkingSpot._id;
+           }
+         }
+      });
 
-
-    vm.closeAlert = function(index) {
-      vm.alerts.splice(index, 1);
+      allReviews.result.then(function () {
+        
+      });
     };
 
     vm.checkLoggedIn();
