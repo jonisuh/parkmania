@@ -53,3 +53,8 @@ blockquote footer:before, blockquote small:before, blockquote .small:before {
 .gm-style-cc{
   display: none;
 }
+.timeSelectButton{
+	display: inline-block;
+	color: #d34615;
+	cursor: pointer;
+}

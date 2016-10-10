@@ -11,18 +11,9 @@
 
       var ua = navigator.userAgent.toLowerCase();
       isAndroid = ua.indexOf("android") > -1,
-      geoTimeout = isAndroid ? '40000' : '15000';
-
-      //console.log(geoTimeout);
+      geoTimeout = isAndroid ? '20000' : '10000';
 
       if (navigator.geolocation) {
-        /*
-        navigator.geolocation.getCurrentPosition(successcallback, errorcallback, {
-          enableHighAccuracy: true,
-          timeout : geoTimeout,
-          maximumAge: 0
-        });
-        */
 
         //Dummy one, which will result in a working next statement.
         navigator.geolocation.getCurrentPosition(function () {}, function () {}, {});

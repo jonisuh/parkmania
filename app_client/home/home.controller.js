@@ -17,6 +17,19 @@
     });
 
     vm.alertPopoverVisible = false;
+    vm.timeSelectionOptions = {};
+
+    for (i = 0; i < 24; i+=2) {
+      if(i < 10 && i != 8){
+        vm.timeSelectionOptions[i] = 0+""+i+":00 - "+0+(i+2)+":00";
+      }else if( i == 8){
+        vm.timeSelectionOptions[i] = 0+""+i+":00 - "+(i+2)+":00";
+      }else{
+        vm.timeSelectionOptions[i] = i+":00 - "+(i+2)+":00";
+      }
+       
+    }
+    console.log(vm.timeSelectionOptions);
 
     vm.logout = function(){
       authentication.logout();
@@ -248,23 +261,43 @@
       }
       //----
       for (j = 0; j < 24; j+=2) {
+        time = {
+          timespan : "",
+          rating : ""
+        }
 
         if(averageRatings.hasOwnProperty(j)){
-          time = {
-            timespan : j+"-"+(j+2),
-            rating : averageRatings[j]
-          }
+          time.rating = averageRatings[j];
         }else{
-          time = {
-            timespan : j+"-"+(j+2),
-            rating : "No ratings yet."
-          }
+          time.rating = "No ratings yet.";
         }
+
+        time.timespan = vm.timeSelectionOptions[j];
+
         vm.ratingList.push(time);
         if(j === currentTimeHours){
           vm.infoTimeSelect = time.timespan;
+          vm.timeSelectionIndex = j;
         }
       }
+      vm.timeSelectChange();
+    };
+
+    vm.previousTime = function(){
+      vm.timeSelectionIndex -=2;
+      if(vm.timeSelectionIndex < 0){
+        vm.timeSelectionIndex = 22;
+      }
+      vm.infoTimeSelect = vm.timeSelectionOptions[vm.timeSelectionIndex];
+      vm.timeSelectChange();
+    };
+
+    vm.nextTime = function(){
+      vm.timeSelectionIndex +=2;
+      if(vm.timeSelectionIndex > 22){
+        vm.timeSelectionIndex = 0;
+      }
+      vm.infoTimeSelect = vm.timeSelectionOptions[vm.timeSelectionIndex];
       vm.timeSelectChange();
     };
 
@@ -275,24 +308,25 @@
         }
       }
 
+
       selectedTimeSpan = vm.infoTimeSelect.split("-");
-      //console.log(selectedTimeSpan);
+      selectedTimeSpan = {
+        0 : parseInt(selectedTimeSpan[0].split(":")[0]),
+        1 : parseInt(selectedTimeSpan[1].split(":")[0])
+      }
+
 
       vm.newestReview = null;
 
       for(i in vm.infoParkingSpot.reviews){
         timestamp = new Date(Date.parse(vm.infoParkingSpot.reviews[i].time));
 
-        //console.log(timestamp.getHours());
         if((timestamp.getHours() >= selectedTimeSpan[0]) && (timestamp.getHours() < selectedTimeSpan[1])){
           if(!vm.newestReview){
-            //console.log("earliest review placed"+timestamp);
             vm.newestReview = vm.infoParkingSpot.reviews[i];
           }else{ 
             earliestReviewTime = new Date(Date.parse(vm.newestReview.time));
-            //console.log("earliest : "+earliestReviewTime.getTime()+"--"+earliestReviewTime+"\nchecked : "+timestamp.getTime()+"--"+timestamp);
             if(timestamp.getTime() > earliestReviewTime.getTime()){
-              //console.log("newer review found");
               vm.newestReview = vm.infoParkingSpot.reviews[i];
             }
           }

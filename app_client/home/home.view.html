@@ -32,7 +32,12 @@
 			</div>
 			<br>
 			<div>
-				Time: <select ng-model="vm.infoTimeSelect" ng-change="vm.timeSelectChange()" ng-options="time.timespan as time.timespan for time in vm.ratingList"></select>
+
+				<div id="infoTimeSelect">
+					<div class="timeSelectButton" ng-click="vm.previousTime()"><span class="	glyphicon glyphicon-chevron-left"></span></div>
+					<input style="background-color: white; width: 40%; display: inline-block;" type="text" ng-disabled="true" class="form-control" ng-model="vm.infoTimeSelect"><div class="timeSelectButton" ng-click="vm.nextTime()"><span class="glyphicon glyphicon-chevron-right"></span></div>
+				</div>
+
 			</div>
 			<br>
 			<!-- NEWEST REVIEW -->
