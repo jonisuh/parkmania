@@ -8,9 +8,11 @@
   homeCtrl.$inject = ['$http','$window','$location','$resource','$route','$scope','$uibModal', 'authentication','location','NgMap'];
   function homeCtrl ($http, $window, $location,$resource,$route,$scope,$uibModal,authentication, location, NgMap) {
     //Forcing https
+    /*
     if ($location.protocol() !== 'https') {
       $window.location.href = $location.absUrl().replace('http', 'https');
     }
+    */
 
     var vm = this;
     var map;
@@ -47,18 +49,27 @@
        vm.userMarker = {
         coords : [location.coords.longitude, location.coords.latitude]
        }
+       vm.directionOrigin = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
        $scope.$apply();
-       /*
-       new google.maps.Marker({
-        position:  new google.maps.LatLng(location.coords.latitude, location.coords.longitude),
-        map: map,
-        title: "Topmost Marker",
-        zIndex: google.maps.Marker.MAX_ZINDEX + 1
-      }); */
 
       }else{
         location.getLocation(vm.setUserLocationMarker, vm.locationerror);
       }
+    };
+
+    vm.showDirections = function(id){
+      $resource('/api/parkingspot/:id', {id: '@_id'}).get({ id: id}, function(parkingspot){
+        vm.parkingspots = [];
+        vm.parkingspots.push(parkingspot);
+        console.log(parkingspot);
+        map.hideInfoWindow('info');
+        vm.directionDestination = new google.maps.LatLng(parkingspot.coords[1], parkingspot.coords[0]); 
+      });
+    };
+
+    vm.hideDirections = function(){
+      vm.directionDestination = null;
+      map.directionsRenderers.directionToSpot.setMap(null);
     };
 
     vm.hideAlerts = function(){
@@ -77,6 +88,7 @@
       map.setCenter(latlng);
       map.setZoom(10);
       $resource('/api/parkingspot/all').query(function(parkingspots){
+        console.log(parkingspots);
         vm.parkingspots = parkingspots;
       });
     };
@@ -164,6 +176,7 @@
       vm.userMarker = {
         coords : [position.coords.longitude, position.coords.latitude]
        }
+       vm.directionOrigin = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
 
       $resource('/api/parkingspot?lng='+position.coords.longitude+'&lat='+position.coords.latitude+'&maxdist='+vm.searchRadius+'&results=5').query(function(parkingspots){
         vm.parkingspots = parkingspots;

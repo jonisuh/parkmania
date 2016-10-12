@@ -26,6 +26,15 @@
 	stroke-color='#FF0000' stroke-opacity="0" stroke-weight="0"
 	center="{{vm.circleCenter}}" radius="{{vm.searchRadius}}"></shape>
 
+ <directions ng-show="vm.directionShow"
+ 	  id="directionToSpot"
+      draggable="true"
+      suppress-markers="true"
+      travel-mode="DRIVING"
+      origin="{{vm.directionOrigin}}"
+      destination="{{vm.directionDestination}}">
+    </directions>
+
 	<info-window id="userinfo">
 		<span>You are here</span>
 	</info-window>
@@ -33,7 +42,8 @@
 	<info-window id="info">
 		<div class="container" style="min-width:200px; max-width:300px ">
 			<p style="max-width: 200px">{{vm.infoParkingSpot.address}}</p>
-
+			<a style="display: block; margin-bottom: 5px;" ng-show="vm.userMarker && !vm.directionDestination" ng-click="vm.showDirections(vm.clickedMarkerId)">Show directions</a>
+			<a style="display: block; margin-bottom: 5px;" ng-show="vm.directionDestination" ng-click="vm.hideDirections()">Hide directions</a>
 			<div>Rating: 
 				<span ng-hide="vm.infoCurrentRating == 'No ratings yet.'">
 					<span ng-show="vm.infoCurrentRating >= 1" class="glyphicon glyphicon-star"></span><span ng-hide="vm.infoCurrentRating >= 1" class="glyphicon glyphicon-star-empty"></span>
