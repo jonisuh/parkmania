@@ -5,9 +5,13 @@
     .module('Parkmania')
     .controller('HomeCtrl', homeCtrl);
 
-  homeCtrl.$inject = ['$http','$location','$resource','$route','$scope','$uibModal', 'authentication','location','NgMap'];
-  function homeCtrl ($http, $location,$resource,$route,$scope,$uibModal,authentication, location, NgMap) {
-    
+  homeCtrl.$inject = ['$http','$window','$location','$resource','$route','$scope','$uibModal', 'authentication','location','NgMap'];
+  function homeCtrl ($http, $window, $location,$resource,$route,$scope,$uibModal,authentication, location, NgMap) {
+    //Forcing https
+    if ($location.protocol() !== 'https') {
+      $window.location.href = $location.absUrl().replace('http', 'https');
+    }
+
     var vm = this;
     var map;
     var geocoder = new google.maps.Geocoder;
@@ -39,10 +43,11 @@
 
     vm.setUserLocationMarker = function(location){
       if(location){
+
        vm.userMarker = {
         coords : [location.coords.longitude, location.coords.latitude]
        }
-       
+       $scope.$apply();
        /*
        new google.maps.Marker({
         position:  new google.maps.LatLng(location.coords.latitude, location.coords.longitude),
@@ -183,7 +188,7 @@
         vm.parkingspots = parkingspots;
         if(parkingspots.length == 0){
           vm.alertsVisible = true;
-          vm.alertContent = 'No parkingspots found near the address.'
+          vm.alertContent = 'No parking spots found near the address.'
         }
       });
     };
@@ -203,9 +208,7 @@
       modalInstance.closed.then(function () {
         vm.checkLoggedIn();
         if(vm.isLoggedIn){
-          console.log("test");
           setTimeout(function(){
-           console.log(map);
             google.maps.event.trigger(map, 'resize');
              vm.showAll();
           }, 1);
@@ -429,10 +432,14 @@
          }
         });
 
-        reviewModal.result.then(function () {
-          console.log(addresscoords);
-          if(addresscoords.lat && addresscoords.lng){
-            vm.findNearAddress(addresscoords);
+        reviewModal.result.then(function (success) {
+          if(success){
+            $resource('/api/parkingspot/:id', {id: '@_id'}).get({ id: id}, function(parkingspot){
+            vm.infoParkingSpot = parkingspot;
+            vm.createRatingList(vm.infoParkingSpot.reviews);
+            map.showInfoWindow('info',vm.clickedMarkerId);
+          });
+
           }
         });
     }

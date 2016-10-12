@@ -96,8 +96,10 @@
 </ng-map>
 
 <div id="map-blocked" ng-hide="vm.isLoggedIn">
-	<h1> You are not logged in. </h1>
-	<p>Please <a href="#" class="btn btn-primary btn-sm" ng-click="vm.createNewSpot()">Log in</a>
+	<div id="map-block-container">
+		<h3> You are not logged in. 
+		Please log in to enable the map.</h3>
+	</div>
 </div>
 
 <div id="alertContainer" ng-show="vm.alertsVisible">

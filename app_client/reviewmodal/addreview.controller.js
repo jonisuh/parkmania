@@ -44,7 +44,7 @@
 				}).success(function (data, status, headers, config) {
 					vm.alertType = "success";
 					vm.alertText = "Review added!";
-					setTimeout(function(){ vm.closeModal() }, 1500);
+					setTimeout(function(){ $uibModalInstance.close(true);	 }, 1500);
 	            })
 	            .error(function (data, status, header, config) {
 	            	console.log(status);
