@@ -1,22 +1,24 @@
 <div class="container" style="width: 100%; margin-bottom: 10px;">
-<div class="header" style="width: 100%; display: block;">
-  <h1 style="font-size:20px; display: inline-block; max-width: 85%"> All reviews for {{vm.parkingspot.address}}</h1> 
-  <button style="float: right; margin-top: 22px;" class="btn btn-sm exit-btn" ng-click="vm.closeModal()"><span class="glyphicon glyphicon glyphicon-remove"></span></button>
-</div>
+	<div class="header" style="width: 100%; display: block;">
+	  <h1 style="font-size:20px; display: inline-block; max-width: 85%"> All reviews for {{vm.parkingspot.address}}</h1> 
+	  <button style="float: right; margin-top: 22px;" class="btn btn-sm exit-btn" ng-click="vm.closeModal()"><span class="glyphicon glyphicon glyphicon-remove"></span></button>
+	</div>
+	  <hr>
 
-  <hr>
-  <div ng-repeat="review in vm.parkingspot.reviews">
-  	<blockquote>
-		<span>
-			<span ng-show="review.rating >= 1" class="glyphicon glyphicon-star"></span><span ng-hide="review.rating >= 1" class="glyphicon glyphicon-star-empty"></span>
-			<span ng-show="review.rating >= 2" class="glyphicon glyphicon-star"></span><span ng-hide="review.rating >= 2" class="glyphicon glyphicon-star-empty"></span>
-			<span ng-show="review.rating >= 3" class="glyphicon glyphicon-star"></span><span ng-hide="review.rating >= 3" class="glyphicon glyphicon-star-empty"></span>
-			<span ng-show="review.rating >= 4" class="glyphicon glyphicon-star"></span><span ng-hide="review.rating >= 4" class="glyphicon glyphicon-star-empty"></span>
-			<span ng-show="review.rating >= 5" class="glyphicon glyphicon-star"></span><span ng-hide="review.rating >= 5" class="glyphicon glyphicon-star-empty"></span>
-		</span>
-		<p>{{review.description}}</p>
-		<small><p>Author: {{review.author.name}}</p> <cite title="Source Title"><p>On {{review.time}}</p></cite></small>
-	</blockquote>
-	<hr>
-  </div>
+	  <img class="loading-image" style="width: 150px; height: 150px; margin: auto; display: block;" ng-hide="vm.parkingspot" src="/images/rolling.gif" >
+
+	  <div class="review-container" ng-repeat="review in vm.parkingspot.reviews" >
+	  	<blockquote>
+			<span>
+				<span ng-show="review.rating >= 1" class="glyphicon glyphicon-star"></span><span ng-hide="review.rating >= 1" class="glyphicon glyphicon-star-empty"></span>
+				<span ng-show="review.rating >= 2" class="glyphicon glyphicon-star"></span><span ng-hide="review.rating >= 2" class="glyphicon glyphicon-star-empty"></span>
+				<span ng-show="review.rating >= 3" class="glyphicon glyphicon-star"></span><span ng-hide="review.rating >= 3" class="glyphicon glyphicon-star-empty"></span>
+				<span ng-show="review.rating >= 4" class="glyphicon glyphicon-star"></span><span ng-hide="review.rating >= 4" class="glyphicon glyphicon-star-empty"></span>
+				<span ng-show="review.rating >= 5" class="glyphicon glyphicon-star"></span><span ng-hide="review.rating >= 5" class="glyphicon glyphicon-star-empty"></span>
+			</span>
+			<p>{{review.description}}</p>
+			<small><p>Author: {{review.author.name}}</p> <cite title="Source Title"><p>On {{review.time}}</p></cite></small>
+		</blockquote>
+		<hr>
+	  </div>
 </div> 

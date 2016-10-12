@@ -1,6 +1,6 @@
 (function () {
 
-  angular.module('Parkmania', ['ngResource','ngRoute','ngMap','ui.bootstrap'])
+  angular.module('Parkmania', ['ngResource','ngRoute','ngAnimate','ngMap','ui.bootstrap'])
     .config(['$routeProvider', '$locationProvider', config]);
 
 

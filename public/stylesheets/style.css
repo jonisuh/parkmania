@@ -4,9 +4,11 @@
 
 body {
 	display:block;
+	height:90%;
 	max-width: 900px;
 	margin-right: auto;
 	margin-left: auto;
+	background-color: #eeeeee;
 
 }
 .navbar{
@@ -18,9 +20,44 @@ ng-map {
 	max-width: 900px;
 	margin-top: 50px;
 }
+#alertContainer{
+	position: absolute;
+	top: 50px;
+	min-width: 250px;
+	max-width:350px;
+	min-height: 50px;
+	background-color: #e95420;
+	color: white;
+	float: left;
+}
+#alertContainerContent{
+	margin-top:2px;
+	margin-left: 2px;
+	margin-bottom: 2px;
+	display: inline-block;
+	max-width: 85%;
+	word-wrap: break-word;
+}
+
+
+#alertContainerCloseButton{
+	display: inline-block;
+	float: right; 
+	margin-top: 5px;
+}
 
 .pac-container {
 	z-index:1051 !important;
+}
+.user-marker{
+	
+}
+
+#map-blocked{
+	height:500px;
+	max-width: 900px;
+	margin-top: 50px;
+	background-image: url('/images/map-disabled3.png');
 }
 
 .glyphicon-star{
@@ -55,6 +92,100 @@ blockquote footer:before, blockquote small:before, blockquote .small:before {
 }
 .timeSelectButton{
 	display: inline-block;
+	background-color: white;
+	border-color: white;
 	color: #d34615;
 	cursor: pointer;
+	text-align: center;
+
+	height: 38px;
+    padding: 8px 0px;
+    font-size: 14px;
+}
+
+
+
+.loading-image.ng-hide-remove {
+	-webkit-animation: enter_sequence 1s linear; /* Safari/Chrome */
+	animation: enter_sequence 1s linear; /* IE10+ and Future Browsers */
+}
+.loading-image.ng-hide-add {
+	-webkit-animation: leave_sequence 0.2s linear; /* Safari/Chrome */
+	animation: leave_sequence 0.2s linear; /* IE10+ and Future Browsers */
+}
+/*
+.newestReview.ng-hide-remove {
+	-webkit-animation: enter_sequence 1s linear; 
+	animation: enter_sequence 1s linear; 
+}
+*/
+.newestReviewError h3.ng-hide-remove {
+	-webkit-animation: enter_sequence 1s linear; 
+	animation: enter_sequence 1s linear; 
+}
+
+@-webkit-keyframes enter_sequence {
+	0% { opacity:0; height: 0%; }
+	100% { opacity:1; height: 100%;}
+}
+@keyframes enter_sequence {
+	0% { opacity:0; height: 0%;}
+	100% { opacity:1; height: 100%; }
+}
+
+@-webkit-keyframes leave_sequence {
+	0% { opacity:1; height: 100%;}
+	100% { opacity:0; height: 0%;}
+}
+
+@keyframes leave_sequence {
+	0% { opacity:1; height: 100%;}
+	100% { opacity:0; height: 0%;}
+}
+
+
+
+.review-container.ng-move,
+.review-container.ng-enter,
+.review-container.ng-leave {
+  -webkit-transition:all linear 1s;
+  transition:all linear 1s;
+}
+
+.review-container.ng-leave.ng-leave-active,
+.review-container.ng-move,
+.review-container.ng-enter {
+  opacity:0;
+}
+
+.review-container.ng-leave,
+.review-container.ng-move.ng-move-active,
+.review-container.ng-enter.ng-enter-active {
+  opacity:1;
+}
+
+#infoTimeSelect {
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+} 
+
+#timeSelectionFormInput{
+	margin-right: 2px;
+}
+
+.newestReview{
+	height: 160px;
+}
+.newestReviewError{
+	padding-top:20%;
+	height: 160px; 
+	max-width: 100%;
+}
+.newestReviewError h3{
+	margin: 0;
+	font-size: 18px;
+	color: #aea79f;
 }

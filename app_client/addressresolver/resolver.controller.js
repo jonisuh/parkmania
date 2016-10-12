@@ -12,10 +12,8 @@
 
 		vm.return = function() { */
 
-			console.log(vm.place);
 			if(vm.place.geometry){
 				addresscoords = vm.place.geometry.location.toJSON();
-				console.log("returning "+addresscoords);
 				$uibModalInstance.close(addresscoords);	
 			}else{
 				$uibModalInstance.dismiss('cancel');	

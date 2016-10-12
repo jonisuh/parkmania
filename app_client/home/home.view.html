@@ -2,19 +2,33 @@
 	<navigation popover-placement='bottom-left' popover-is-open="vm.alertPopoverVisible" uib-popover-html="vm.alertMessage"></navigation>
 
 
-	<ng-map center="Helsinki Finland" zoom="10" on-click="vm.mapClick($event)">
-		<marker ng-repeat="spot in vm.parkingspots"
+
+	<ng-map ng-show="vm.isLoggedIn" center="Helsinki Finland" zoom="10" on-click="vm.mapClick($event)" default-style="false">
+		<marker class="parkingspot-marker" ng-repeat="spot in vm.parkingspots"
 		id="{{spot._id}}"
 		position="{{spot.coords[1]}},{{spot.coords[0]}}"
 		title="{{spot.address}}"
 		on-click="vm.showInfoWindow()"
 		icon="{
-		url:'images/parkingspot.png'
-	}"></marker>
+			url:'images/parkingspot.png'
+		}"></marker>
+		<marker class="user-marker" ng-show="vm.userMarker"
+			id="user-marker"
+			position="{{vm.userMarker.coords[1]}},{{vm.userMarker.coords[0]}}"
+			title="User"
+			animation="DROP"
+			on-click="vm.showUserInfoWindow()"
+			icon="{
+				url:'images/user.png'
+			}"></marker>
 
 	<shape id="circle" name="circle" centered="true"
 	stroke-color='#FF0000' stroke-opacity="0" stroke-weight="0"
 	center="{{vm.circleCenter}}" radius="{{vm.searchRadius}}"></shape>
+
+	<info-window id="userinfo">
+		<span>You are here</span>
+	</info-window>
 
 	<info-window id="info">
 		<div class="container" style="min-width:200px; max-width:300px ">
@@ -35,13 +49,13 @@
 
 				<div id="infoTimeSelect">
 					<div class="timeSelectButton" ng-click="vm.previousTime()"><span class="	glyphicon glyphicon-chevron-left"></span></div>
-					<input style="background-color: white; width: 40%; display: inline-block;" type="text" ng-disabled="true" class="form-control" ng-model="vm.infoTimeSelect"><div class="timeSelectButton" ng-click="vm.nextTime()"><span class="glyphicon glyphicon-chevron-right"></span></div>
+					<input id="timeSelectionFormInput" style="background-color: white; width: 105px; display: inline-block;" type="text" ng-disabled="true" class="form-control" ng-model="vm.infoTimeSelect"><div class="timeSelectButton" ng-click="vm.nextTime()"><span class="glyphicon glyphicon-chevron-right"></span></div>
 				</div>
 
 			</div>
 			<br>
 			<!-- NEWEST REVIEW -->
-			<div ng-show="vm.newestReview">
+			<div class="newestReview" ng-show="vm.newestReview">
 			<p>Most recent review:</p>
 				<blockquote>
 					<span>
@@ -51,14 +65,20 @@
 						<span ng-show="vm.newestReview.rating >= 4" class="glyphicon glyphicon-star"></span><span ng-hide="vm.newestReview.rating >= 4" class="glyphicon glyphicon-star-empty"></span>
 						<span ng-show="vm.newestReview.rating >= 5" class="glyphicon glyphicon-star"></span><span ng-hide="vm.newestReview.rating >= 5" class="glyphicon glyphicon-star-empty"></span>
 					</span>
-					<p>{{vm.newestReview.description}}</p>
+					<p style="max-height:50px; overflow: auto" >{{vm.newestReview.description}}</p>
 					<small><p>Author: {{vm.newestReview.author.name}}</p> <cite title="Source Title"><p>On {{vm.newestReview.time}}</p></cite></small>
 
 				</blockquote>
 				
 			</div>
-			<p style="max-width: 200px" ng-hide="vm.newestReview || vm.infoParkingSpot.reviews.length == 0">No reviews for the selected time span.</p>
-			<p style="max-width: 200px" ng-show="vm.infoParkingSpot.reviews.length == 0">No reviews for the parking spot.</p>
+			<div class="newestReviewError" ng-hide="vm.newestReview || vm.infoParkingSpot.reviews.length == 0">
+				<h3 ng-hide="vm.newestReview || vm.infoParkingSpot.reviews.length == 0" >No reviews for the selected time span.</h3>
+			</div>
+
+			<div class="newestReviewError" ng-show="vm.infoParkingSpot.reviews.length == 0">
+				<h3>No reviews for the parking spot.</h3>
+			</div>
+
 			<a style="display: block" ng-show="vm.infoParkingSpot.reviews.length > 0"#" ng-click="vm.showAllReviews()">Show all reviews</a>
 			<button class="btn btn-primary" ng-click="vm.addReview(vm.clickedMarkerId)">Leave a review!</button>
 		</div>
@@ -75,6 +95,20 @@
 
 </ng-map>
 
+<div id="map-blocked" ng-hide="vm.isLoggedIn">
+	<h1> You are not logged in. </h1>
+	<p>Please <a href="#" class="btn btn-primary btn-sm" ng-click="vm.createNewSpot()">Log in</a>
+</div>
+
+<div id="alertContainer" ng-show="vm.alertsVisible">
+	<div id="alertContainerContent">
+		{{vm.alertContent}}
+	</div>
+	<div id="alertContainerCloseButton">
+		<button class="btn btn-sm exit-btn" ng-click="vm.hideAlerts()"><span class="glyphicon glyphicon glyphicon-remove"></span></button>
+	</div>
+</div>
+
 <div class="btn-group btn-group-justified">
 	<a href="#" class="btn btn-primary" ng-click="vm.nearCurrentLocation()">Find nearby</a>
 	<a href="#" class="btn btn-primary" ng-click="vm.showAll()">Find all</a>
@@ -83,4 +117,5 @@
 </div>
 </body>
 <br>
+
 <footer> <p>Parkmania™ by team Kiwi <p></footer>

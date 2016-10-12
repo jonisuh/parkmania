@@ -5,8 +5,8 @@
     .module('Parkmania')
     .controller('HomeCtrl', homeCtrl);
 
-  homeCtrl.$inject = ['$http','$location','$resource','$route','$scope','$uibModal', 'authentication','location','NgMap', '$sce'];
-  function homeCtrl ($http, $location,$resource,$route,$scope,$uibModal,authentication, location, NgMap, $sce) {
+  homeCtrl.$inject = ['$http','$location','$resource','$route','$scope','$uibModal', 'authentication','location','NgMap'];
+  function homeCtrl ($http, $location,$resource,$route,$scope,$uibModal,authentication, location, NgMap) {
     
     var vm = this;
     var map;
@@ -14,9 +14,10 @@
     NgMap.getMap().then(function(evtMap) {
       map = evtMap;
       vm.showAll();
+      location.getLocation(vm.setUserLocationMarker, vm.locationerror);
     });
 
-    vm.alertPopoverVisible = false;
+    vm.alertsVisible = false;
     vm.timeSelectionOptions = {};
 
     for (i = 0; i < 24; i+=2) {
@@ -29,17 +30,40 @@
       }
        
     }
-    console.log(vm.timeSelectionOptions);
 
     vm.logout = function(){
       authentication.logout();
       vm.checkLoggedIn();
       $('.navbar-collapse').collapse('hide')
     };
-    
+
+    vm.setUserLocationMarker = function(location){
+      if(location){
+       vm.userMarker = {
+        coords : [location.coords.longitude, location.coords.latitude]
+       }
+       
+       /*
+       new google.maps.Marker({
+        position:  new google.maps.LatLng(location.coords.latitude, location.coords.longitude),
+        map: map,
+        title: "Topmost Marker",
+        zIndex: google.maps.Marker.MAX_ZINDEX + 1
+      }); */
+
+      }else{
+        location.getLocation(vm.setUserLocationMarker, vm.locationerror);
+      }
+    };
+
+    vm.hideAlerts = function(){
+      vm.alertsVisible = false;
+    };
+
     vm.showAll = function(){
+
       vm.parkingspots = [];
-      vm.alertPopoverVisible = false;
+      vm.alertsVisible = false;
       latlng = new google.maps.LatLng(60.16985569999999, 24.93837899999994);
 
       vm.searchRadius = 0;
@@ -54,7 +78,8 @@
 
     vm.mapClick = function(event) {
       map.hideInfoWindow('info');
-      vm.alertPopoverVisible = false;
+      map.hideInfoWindow('userinfo');
+      vm.alertsVisible = false;
       if(vm.reviewSelection === true){
         vm.selectedCoordinates = event.latLng;
         $resource('/api/parkingspot?lng='+event.latLng.lng()+'&lat='+event.latLng.lat()+'&maxdist=50&results=1').query(function(parkingspots){
@@ -117,24 +142,29 @@
 
 
     vm.nearCurrentLocation = function(){
-      vm.alertPopoverVisible = true;
-      vm.alertMessage = $sce.trustAsHtml('<div>Finding location...</div>');
+      vm.alertsVisible = true;
+      vm.alertContent = 'Finding location...';
       vm.parkingspots = [];
       location.getLocation(vm.locationsuccess, vm.locationerror);
     };
 
     vm.locationsuccess = function(position){
-      vm.alertPopoverVisible = false;
+      vm.alertsVisible = false;
       latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       map.setCenter(latlng);
       vm.searchRadius = 300;
       vm.circleCenter = latlng;
       map.setZoom(15);
+
+      vm.userMarker = {
+        coords : [position.coords.longitude, position.coords.latitude]
+       }
+
       $resource('/api/parkingspot?lng='+position.coords.longitude+'&lat='+position.coords.latitude+'&maxdist='+vm.searchRadius+'&results=5').query(function(parkingspots){
         vm.parkingspots = parkingspots;
         if(parkingspots.length == 0){
-          vm.alertPopoverVisible = true;
-          vm.alertMessage = $sce.trustAsHtml('<div><p>No parkingspots found near your location.</p></div>');
+          vm.alertsVisible = true;
+          vm.alertContent = 'No parkingspots found near your location.';
         }
       });
     };
@@ -148,18 +178,19 @@
       vm.circleCenter = latlng;
 
       map.setZoom(15);
-      $resource('/api/parkingspot?lng='+location.lng+'&lat='+location.lat+'&maxdist='+vm.searchRadius+'&results=10').query(function(parkingspots){
+
+      $resource('/api/parkingspot?lng='+location.lng+'&lat='+location.lat+'&maxdist='+vm.searchRadius+'&results=5').query(function(parkingspots){
         vm.parkingspots = parkingspots;
         if(parkingspots.length == 0){
-          vm.alertPopoverVisible = true;
-          vm.alertMessage = $sce.trustAsHtml('<div><p>No parkingspots found near your location.</p></div>');
+          vm.alertsVisible = true;
+          vm.alertContent = 'No parkingspots found near the address.'
         }
       });
     };
 
     vm.locationerror = function(error){
-      vm.alertPopoverVisible = true;
-      vm.alertMessage = $sce.trustAsHtml('<div><p>The application could not determine your location.\nPlease check the GPS settings in your device.</p></div>');
+      vm.alertsVisible = true;
+      vm.alertContent = 'The application could not determine your location.\nPlease check the GPS settings in your device.'
       $scope.$apply();
     };
 
@@ -171,6 +202,14 @@
 
       modalInstance.closed.then(function () {
         vm.checkLoggedIn();
+        if(vm.isLoggedIn){
+          console.log("test");
+          setTimeout(function(){
+           console.log(map);
+            google.maps.event.trigger(map, 'resize');
+             vm.showAll();
+          }, 1);
+        }
       });
 
     };
@@ -183,6 +222,13 @@
 
       modalInstance.closed.then(function () {
         vm.checkLoggedIn();
+         if(vm.isLoggedIn){
+          setTimeout(function(){
+           console.log(map);
+              google.maps.event.trigger(map, 'resize');
+              vm.showAll();
+            }, 1);
+          }
       });
 
     };
@@ -195,7 +241,6 @@
       });
 
       resolverModal.result.then(function (addresscoords) {
-        console.log(addresscoords);
         if(addresscoords.lat && addresscoords.lng){
           vm.findNearAddress(addresscoords);
         }
@@ -208,9 +253,14 @@
       vm.currentUser = authentication.currentUser();
     };
 
+    vm.showUserInfoWindow = function(){
+      map.showInfoWindow('userinfo',"user-marker");
+    };
+
     vm.showInfoWindow= function(evt) {
       vm.clickedMarkerId = this.id;
-      vm.alertPopoverVisible = false;
+      map.hideInfoWindow('userinfo');
+      vm.alertsVisible = false;
       if(vm.reviewSelection === true){
         vm.reviewSelection = false;
         vm.openReviewModal(this.id);
@@ -363,8 +413,8 @@
         vm.openReviewModal(id);
       }else{
         vm.reviewSelection = true;
-        vm.alertPopoverVisible = true;
-        vm.alertMessage = $sce.trustAsHtml('<div>Please select a parkingspot to review.</div>');
+        vm.alertsVisible = true;
+        vm.alertContent = 'Please select a parkingspot to review.';
       }
     }
 
@@ -396,10 +446,6 @@
            return vm.infoParkingSpot._id;
            }
          }
-      });
-
-      allReviews.result.then(function () {
-        
       });
     };
 
