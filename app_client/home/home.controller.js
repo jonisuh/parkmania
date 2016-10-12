@@ -61,8 +61,8 @@
       $resource('/api/parkingspot/:id', {id: '@_id'}).get({ id: id}, function(parkingspot){
         vm.parkingspots = [];
         vm.parkingspots.push(parkingspot);
-        console.log(parkingspot);
         map.hideInfoWindow('info');
+        map.directionsRenderers.directionToSpot.setMap(map);
         vm.directionDestination = new google.maps.LatLng(parkingspot.coords[1], parkingspot.coords[0]); 
       });
     };
@@ -89,7 +89,6 @@
       map.setCenter(latlng);
       map.setZoom(10);
       $resource('/api/parkingspot/all').query(function(parkingspots){
-        console.log(parkingspots);
         vm.parkingspots = parkingspots;
       });
     };
