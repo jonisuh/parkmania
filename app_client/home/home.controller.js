@@ -70,6 +70,7 @@
     vm.hideDirections = function(){
       vm.directionDestination = null;
       map.directionsRenderers.directionToSpot.setMap(null);
+      vm.showAll();
     };
 
     vm.hideAlerts = function(){
